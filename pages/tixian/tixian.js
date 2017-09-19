@@ -5,6 +5,9 @@ Page({
     data: {
         yu_e:10.2,
         ti_xian_jin_e:'',
+        input_type:'digit',
+        warningShow:false,
+        warning:''
     },
     onLoad: function () {
         // console.log('onLoad')
@@ -30,6 +33,13 @@ Page({
     //点击提现按钮时的操作
     tixian:function() {
         //将提现金额发给后台
+        if(this.data.ti_xian_jin_e > this.data.yu_e) {
+            this.setData({
+                warningShow:!this.data.warningShow,
+                warning:'提取的金额不能大于余额!'
+            })
+            // return;
+        }
         console.log(this.data.ti_xian_jin_e);
     },
     //得到你所要提现的金额
