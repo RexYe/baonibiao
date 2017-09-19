@@ -74,7 +74,7 @@
 }
 
 .rev-operation{
-  margin-top: 30rpx;
+  margin-top: 35rpx;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -97,7 +97,7 @@
 
 .ope-str{
   padding-left: 5rpx;
-  font-size: 32rpx;
+  font-size: 35rpx;
   color: #fff;
 }
 
@@ -122,6 +122,16 @@
 #rec-jubao{
   padding-right: 40rpx;
   color:#9abdf9;
+}
+
+.recieve-none{
+  display: flex;
+  justify-content: center;
+  padding-top: 30rpx;
+}
+.revieve-none-str{
+  font-size: 22rpx;
+  color:#8a8a8a;
 }
 
 .receive-peoples{

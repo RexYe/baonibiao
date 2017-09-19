@@ -72,7 +72,7 @@ Page({
 
     this.setData({
       userInfo:userInfo,
-      singStr:'儿子生日快乐',
+      singStr:'生日快乐',
       rpdetail:{
         amountMoney:'1',
         receiveAcount:'0',

@@ -1,5 +1,6 @@
 //index.js
 //获取应用实例
+var util=require('../../utils/util.js')
 var app = getApp()
 Page({
     data: {
@@ -10,6 +11,7 @@ Page({
         warning:''
     },
     onLoad: function () {
+<<<<<<< HEAD
       var that = this
       //获取全局变量==>余额
       that.setData({
