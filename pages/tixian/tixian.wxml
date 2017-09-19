@@ -4,7 +4,7 @@
     <view class="wrap">
         <view class="yetx-content">
             <view class="user-ye">
-                <view>账户余额:</view><text class="yu-e">{{yu_e}}元</text>
+                <view>账户余额:</view><text class="yu-e">{{available_balance}}元</text>
             </view>
             <view class="tixian">
                 <view >提现金额</view>

@@ -13,14 +13,14 @@ Page({
   onLoad: function(options) {
     console.log('onLoad')
     var that = this
-    let fachu_redmoney=util.formatMoney(that.data.fachu_redmoney)
-    let shoudao_redmoney=util.formatMoney(that.data.shoudao_redmoney)
-    console.log('money=>>>',util.formatMoney(that.data.fachu_redmoney))
-    //金钱格式化保留两位小数
-    that.setData({
-      shoudao_redmoney:shoudao_redmoney,
-      fachu_redmoney:fachu_redmoney
-    })
+    // let fachu_redmoney=util.formatMoney(that.data.fachu_redmoney)
+    // let shoudao_redmoney=util.formatMoney(that.data.shoudao_redmoney)
+    // console.log('money=>>>',util.formatMoney(that.data.fachu_redmoney))
+    // //金钱格式化保留两位小数
+    // that.setData({
+    //   shoudao_redmoney:shoudao_redmoney,
+    //   fachu_redmoney:fachu_redmoney
+    // })
     //用户信息
     app.getUserInfo(function(userInfo) {
       //更新数据

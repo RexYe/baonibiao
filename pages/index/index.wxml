@@ -12,7 +12,7 @@
         <text class="tips">{{item.tips}}</text>
          <image src="{{item.tips_src}}" bindtap="how_to_use"></image>
       </view>
-      <text class="tips">需支付¥{{charge_money}}服务费，优先使用余额¥{{balance}}</text>
+      <text class="tips">需支付¥{{charge_money}}服务费，优先使用余额¥{{available_balance}}</text>
       <button type="warn" size="default" bindtap="build_red_packet">{{build_buttonValue}}</button>
     </view>
   </view>

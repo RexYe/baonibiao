@@ -1,5 +1,5 @@
 //index.js
-
+//发送红包页面
 var app = getApp()
 Page({
   data: {
@@ -14,7 +14,7 @@ Page({
     //是否显示警告栏
     warningShow:false,
     //用户余额
-    balance:'5.00',
+    available_balance:0.00,
     red_packet_input:[
       {
         menu_name:'设置口令',
@@ -191,6 +191,10 @@ Page({
 },
   onLoad: function () {
     var that = this
+    //获取全局变量==>余额
+    that.setData({
+      available_balance:app.globalData.balance
+    })
     //调用应用实例的方法获取全局数据
     app.getUserInfo(function(userInfo){
       //更新数据

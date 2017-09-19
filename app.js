@@ -4,6 +4,7 @@ App({
     //调用API从本地缓存中获取数据
     wx.login({
     success: function(res) {
+      const t = this;
       if (res.code) {
         //发起网络请求
           // wx.request({
@@ -14,6 +15,8 @@ App({
           //   },
           //   success: function(res) {
           //       var openid = res.data.openid;
+          //       //发送请求，拿到用户的余额
+          //       t.globalData.balance = 10.2
           //   },
           //   fail: function(err) {
           //       console.log(err)
@@ -47,6 +50,7 @@ App({
   },
 
   globalData: {
-    userInfo: null
+    userInfo: null,
+    balance: 10.2
   }
 })
