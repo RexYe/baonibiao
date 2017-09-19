@@ -23,14 +23,14 @@ Page({
           console.log(res.target)
         }
         return {
-          title: '包你飚',
-           //path:"吕智兵的页面的url"
-          success: function(res) {
-            // 转发成功
-          },
-          fail: function(res) {
-            // 转发失败
-          }
+            title: '包你彪',
+            path:"../hongbao/hongbao",
+            success: function(res) {
+                // 转发成功
+            },
+            fail: function(res) {
+                // 转发失败
+            }
         }
     }
 })

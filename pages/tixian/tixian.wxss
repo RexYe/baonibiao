@@ -59,6 +59,11 @@
     width:100%;
     background-color:#ccc;
 }
+.wraning{
+    font-size:24rpx;
+    color:#e74b41;
+    padding:0 40rpx;
+}
 .all-tixian{
     padding:0 40rpx;
     font-size:28rpx;
