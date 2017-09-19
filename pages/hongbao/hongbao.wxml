@@ -68,7 +68,7 @@
       <view id='rec-jubao'>举报</view>
     </view>
 
-    <view class="receive-peoples">
+    <view class="receive-peoples" wx:if="{{userList}}">
       <view class="receive-single-person" wx:for="{{userList}}" wx:key="unique" wx:for-index='index'>
         <view class="rsp-left">
           <image class="rsp-headpic" src="{{item.headpicUrl}}"></image>
@@ -90,10 +90,16 @@
           <view class="rsp-money">{{item.money}}元</view>
           <view class="rsp-date">{{item.date}}</view>
         </view>
-
+        
       </view>
-
     </view>
-
+    
+    <view wx:else class="recieve-none">
+      <view class="revieve-none-str">
+        未领取的金额，将于24小时后退回原账户余额
+      </view>
+      
+    </view>
+    
   </view>
 </view>
