@@ -156,14 +156,14 @@ Page({
 
   getMoney:function () {
     //跳转至提现页面
-    wx.navigateTo({
+    wx.switchTab({
       url: '../tixian/tixian'
     })
   },
 
   giveRedPorcket:function (e){
     //跳转至发红包页面
-    wx.navigateTo({
+    wx.switchTab({
       url: '../index/index'
     })
   },
