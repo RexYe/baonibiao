@@ -72,14 +72,14 @@ Page({
 
     this.setData({
       userInfo:userInfo,
-      singStr:'生日快乐',
+      singStr:'儿子生日快乐',
       rpdetail:{
         amountMoney:'1',
         receiveAcount:'0',
         amountNum:'1',
         flag:true,
       },
-      // userList:userList,
+      userList:userList,
       voiceFlags:new Array(userList.length).fill(false),
     })
 
