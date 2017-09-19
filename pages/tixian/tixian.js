@@ -1,15 +1,19 @@
 //index.js
 //获取应用实例
+var util=require('../../utils/util.js')
 var app = getApp()
 Page({
     data: {
-        yu_e:10.2,
+        yu_e:0,
         ti_xian_jin_e:'',
         input_type:'digit',
         warningShow:false,
         warning:''
     },
     onLoad: function () {
+        this.setData({
+            yu_e:util.formatMoney(this.data.yu_e),
+        })
         // console.log('onLoad')
         // var that = this
         // //调用应用实例的方法获取全局数据
