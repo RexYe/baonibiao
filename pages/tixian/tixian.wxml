@@ -16,9 +16,11 @@
                     cursor="20"
                     bindinput="getValue"
                     auto-focus
+                    type="{{input_type}}"
                     />
                 <view class="line"></view>
             </view>
+            <view class="wraning" wx:if="{{warningShow}}">{{warning}}</view>
             <view class="all-tixian">
                 提现到微信红包,<text class="all" bindtap="qubutixian">全部提现</text>
             </view>

@@ -45,7 +45,7 @@ Page({
     shiyishi:function() {
         //跳转到吕智兵写的那个页面
         wx.navigateTo({
-            url:'../sharepage/sharepage'
+            url:'../hongbao/hongbao'
         })
     },
     onShareAppMessage: function (res) {

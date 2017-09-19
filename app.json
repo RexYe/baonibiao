@@ -5,7 +5,8 @@
     "pages/hongbao/hongbao",
     "pages/myrecord/myrecord",
     "pages/problems/problems",
-    "pages/zhifuwancheng/zhifuwancheng"
+    "pages/zhifuwancheng/zhifuwancheng",
+    "pages/sharepage/sharepage"
   ],
   "window":{
     "backgroundTextStyle":"light",
