@@ -40,6 +40,8 @@ Page({
     },
     //常见问题
     changjianwenti:function() {
-        console.log("常见问题");
+      wx.navigateTo({
+        url: '../problems/problems'
+      })
     }
 })

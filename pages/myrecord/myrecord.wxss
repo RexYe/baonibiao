@@ -72,10 +72,10 @@ swiper{
 
 .footer-problems {
   position: absolute;
-  bottom: 20rpx;
+  bottom: 100rpx;
   width: 100%;
   text-align: center;
-  color: #606b7d;
+  color: #133b50;
   font-size: 28rpx;
 }
 .numbers text:nth-last-child(1), .money text:nth-last-child(1){

@@ -30,8 +30,8 @@
         "selectedIconPath":"./tabBar_img/publish_on.png"
       },
       {
-        "pagePath": "pages/problems/problems",
-        "text": "问题",
+        "pagePath": "pages/myrecord/myrecord",
+        "text": "我的",
         "iconPath":"./tabBar_img/me.png",
         "selectedIconPath":"./tabBar_img/me_on.png"
       }
