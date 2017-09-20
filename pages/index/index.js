@@ -193,7 +193,7 @@ Page({
     var that = this
     //获取全局变量==>余额
     that.setData({
-      available_balance:app.G.balance
+      userInfo: app.G.userInfo
     })
     //调用应用实例的方法获取全局数据
     // app.getUserInfo(function(userInfo){
