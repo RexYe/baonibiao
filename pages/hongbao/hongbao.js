@@ -1,28 +1,27 @@
-
 import {getWindowH} from '../../utils/util'
 
 var userList = [{
-  name:'蛋蛋爸爸12312312',
+  nickName:'12312312',
   voiceTime:'3',
   money:'1.00',
   date:'9月14日 16:28',
-  headpicUrl:'http://lvzu-imgs.oss-cn-hangzhou.aliyuncs.com/%E4%B8%8B%E8%BD%BD.png',
+  avatarUrl:'http://lvzu-imgs.oss-cn-hangzhou.aliyuncs.com/%E4%B8%8B%E8%BD%BD.png',
   voiceUrl:'',
   gender:'1',
 },{
-  name:'蛋蛋爸爸12312312',
+  nickName:'12312312',
   voiceTime:'3',
   money:'1.00',
   date:'9月14日 16:28',
-  headpicUrl:'http://lvzu-imgs.oss-cn-hangzhou.aliyuncs.com/%E4%B8%8B%E8%BD%BD.png',
+  avatarUrl:'http://lvzu-imgs.oss-cn-hangzhou.aliyuncs.com/%E4%B8%8B%E8%BD%BD.png',
   voiceUrl:'',
   gender:'2',
 },{
-  name:'蛋蛋爸爸12312312',
+  nickName:'12312312',
   voiceTime:'3',
   money:'1.00',
   date:'9月14日 16:28',
-  headpicUrl:'http://lvzu-imgs.oss-cn-hangzhou.aliyuncs.com/%E4%B8%8B%E8%BD%BD.png',
+  avatarUrl:'http://lvzu-imgs.oss-cn-hangzhou.aliyuncs.com/%E4%B8%8B%E8%BD%BD.png',
   voiceUrl:'',
   gender:'1',
 }]
@@ -42,14 +41,25 @@ Page({
 
   //事件处理函数
   onLoad: function () {
-    console.log(getWindowH());
+    var _this = this
+    var _data = this.data
+    var rpReqData = {}
+    
+    this.userInfo = app.G.userInfo
+    this.setData({
+      userInfo:this.userInfo
+    })
+    
+    
+    // rpReqData = {
+    //   rpid = ;
+    // }
+      
+
     //请求列表数据
     // wx.request({
-    //   url: 'test.php', //仅为示例，并非真实的接口地址
-    //   data: {
-    //      x: '' ,
-    //      y: ''
-    //   },
+    //   url: '请求红包信息地址', 
+    //   data: {},
     //   header: {
     //       'content-type': 'application/json' // 默认值
     //   },
@@ -65,13 +75,9 @@ Page({
     //     userList =res
     //   }
     // })
-    var userInfo = {
-      name:'蛋蛋爸爸',
-      headpicUrl:'http://lvzu-imgs.oss-cn-hangzhou.aliyuncs.com/%E4%B8%8B%E8%BD%BD.png',
-    }
+    
 
     this.setData({
-      userInfo:userInfo,
       singStr:'生日快乐',
       rpdetail:{
         amountMoney:'1',
@@ -105,7 +111,7 @@ Page({
         // wx.uploadFile({
         //   url:'https://',
         //   filePath:tempFilePath,
-        //   name:'user',
+        //   nickName:'user',
         //   success:function () {
         //     //处理成功
         //   },

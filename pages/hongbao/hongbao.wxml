@@ -3,12 +3,12 @@
   <view class="receive-main" style="width:100%;height:{{mainH}}">
 
       <image id="headpic-img"
-        src="{{userInfo.headpicUrl}}"
+        src="{{userInfo.avatarUrl}}"
         mode='scaleToFill'
         lazy-load=true
       ></image>
 
-      <view id="username">{{userInfo.name}}</view>
+      <view id="username">{{userInfo.nickName}}</view>
 
       <view class="rp-content">
         <image id="sing-img"
@@ -71,10 +71,10 @@
     <view class="receive-peoples" wx:if="{{userList}}">
       <view class="receive-single-person" wx:for="{{userList}}" wx:key="unique" wx:for-index='index'>
         <view class="rsp-left">
-          <image class="rsp-headpic" src="{{item.headpicUrl}}"></image>
+          <image class="rsp-headpic" src="{{item.avatarUrl}}"></image>
           <view class="rsp-name-voice">
             <view class="rsp-name-gender">
-              <view class="rsp-name">{{item.name}}</view>
+              <view class="rsp-name">{{item.nickName}}</view>
               <image class="rsp-gender" wx:if="{{item.gender==1}}" src="./resource/man.svg"></image>
               <image class="rsp-gender" wx:else src="./resource/women.svg"></image>
             </view>
