@@ -36,8 +36,8 @@ App({
       success: function(res) {
         if(res.statusCode === 200){
           var res1 = res.data
-          if(res1.success && res1.data){
-            cb && cb(res1.data)
+          if(!res1.error){
+            cb && cb(res1)
           }
         }
       },
@@ -46,6 +46,12 @@ App({
   },
   _error: function(err) {
       console.log(err)
+  },
+  GetReqParam: function(data){
+      var t = this
+      return Object.assign({}, {
+          _id: t.G.userInfo._id
+      }, (data||{}))
   },
   G: {
     userInfo: null,
