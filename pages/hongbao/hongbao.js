@@ -1,4 +1,8 @@
 import {getWindowH} from '../../utils/util'
+var testUserInfo = {
+  avatarUrl:'http://lvzu-imgs.oss-cn-hangzhou.aliyuncs.com/%E4%B8%8B%E8%BD%BD.png',
+  nickName:'lvzu1111111111111111111111',
+}
 
 var userList = [{
   nickName:'12312312',
@@ -16,6 +20,30 @@ var userList = [{
   avatarUrl:'http://lvzu-imgs.oss-cn-hangzhou.aliyuncs.com/%E4%B8%8B%E8%BD%BD.png',
   voiceUrl:'',
   gender:'2',
+},{
+  nickName:'12312312',
+  voiceTime:'3',
+  money:'1.00',
+  date:'9月14日 16:28',
+  avatarUrl:'http://lvzu-imgs.oss-cn-hangzhou.aliyuncs.com/%E4%B8%8B%E8%BD%BD.png',
+  voiceUrl:'',
+  gender:'1',
+},{
+  nickName:'12312312',
+  voiceTime:'3',
+  money:'1.00',
+  date:'9月14日 16:28',
+  avatarUrl:'http://lvzu-imgs.oss-cn-hangzhou.aliyuncs.com/%E4%B8%8B%E8%BD%BD.png',
+  voiceUrl:'',
+  gender:'1',
+},{
+  nickName:'12312312',
+  voiceTime:'3',
+  money:'1.00',
+  date:'9月14日 16:28',
+  avatarUrl:'http://lvzu-imgs.oss-cn-hangzhou.aliyuncs.com/%E4%B8%8B%E8%BD%BD.png',
+  voiceUrl:'',
+  gender:'1',
 },{
   nickName:'12312312',
   voiceTime:'3',
@@ -45,21 +73,20 @@ Page({
     var _data = this.data
     var rpReqData = {}
     
-    this.userInfo = app.G.userInfo
+    // this.userInfo = app.G.userInfo
+    this.userInfo = testUserInfo
     this.setData({
       userInfo:this.userInfo
     })
     
-    
-    // rpReqData = {
-    //   rpid = ;
-    // }
+    rpReqData = {
+      // rpid = ;
+    }
       
-
     //请求列表数据
     // wx.request({
     //   url: '请求红包信息地址', 
-    //   data: {},
+    //   data: rpReqData,
     //   header: {
     //       'content-type': 'application/json' // 默认值
     //   },
@@ -78,10 +105,10 @@ Page({
     
 
     this.setData({
-      singStr:'生日快乐',
+      singStr:'生日快乐生日快乐',
       rpdetail:{
         amountMoney:'1',
-        receiveAcount:'0',
+        receiveNum:'0',
         amountNum:'1',
         flag:true,
       },
@@ -93,71 +120,65 @@ Page({
 
   startRec:function () {
     var _this = this
-    wx.showLoading({
-      title: '录音中',
+    wx.stopVoice()
+    this.setData({
+      voiceFlags:new Array(_this.data.userList.length).fill(false)
+      },function () {
+        
+      wx.showLoading({
+        title: '录音中',
+      })
+    
+      wx.startRecord({
+        success: function(res) {
+          var tempFilePath = res.tempFilePath
+          _this.setData({
+              tempVoicePath:tempFilePath,
+          })
+        },
+      })
+      
     })
-    wx.startRecord({
-      success: function(res) {
-        var tempFilePath = res.tempFilePath
-
-        wx.playVoice({
-          filePath: tempFilePath,
-        })
-
-        _this.setData({
-            tempVoicePath:tempFilePath,
-        })
-
-        // wx.uploadFile({
-        //   url:'https://',
-        //   filePath:tempFilePath,
-        //   nickName:'user',
-        //   success:function () {
-        //     //处理成功
-        //   },
-        //   fail:function () {
-        //     //处理失败
-        //   },
-        // })
-      },
-
-      fail: function(res) {
-         //录音失败
-      }
-    })
+    
   },
+  
   stopRec:function () {
      wx.stopRecord()
      wx.hideLoading()
   },
-
+  
   playMusic:function (e) {
-    var _this = this
-    let id = e.currentTarget.dataset.id;
-    if(!this.data.voiceFlags[id]){
-      // 调用api播放音频
-      wx.playVoice({
-        filePath: _this.data.tempVoicePath,
-        complete: function(){
-
-          if(_this.data.voiceFlags[id]){
-            _this.data.voiceFlags[id] = false
+    let [_this,_data] = [this,this.data]
+    let id = e.currentTarget.dataset.id
+    
+    if(!_data.voiceFlags[id]){
+      wx.stopVoice()
+      let tempArr = new Array(_data.userList.length).fill(false)
+      tempArr[id] = true
+      
+      this.setData({
+        voiceFlags:tempArr
+      },function () {
+        // 调用api播放音频
+        wx.playVoice({
+          filePath: _data.tempVoicePath,
+          complete: function(){
+            _data.voiceFlags[id] = false
             _this.setData({
-              voiceFlags:_this.data.voiceFlags
+              voiceFlags:_data.voiceFlags
             })
           }
-        }
+        })
       })
-      this.data.voiceFlags[id] = true
     }
     else {
       //调用api停止播放音频
       wx.stopVoice()
-      this.data.voiceFlags[id] = false
-    }
-    this.setData({
-      voiceFlags:this.data.voiceFlags
-    })
+      _data.voiceFlags[id] = false
+      this.setData({
+        voiceFlags:_data.voiceFlags
+      })
+    }  
   },
 
   getMoney:function () {

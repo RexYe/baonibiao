@@ -150,7 +150,7 @@
   flex-direction: row;
   width: 90%;
   height: 150rpx;
-  border: 1rpx solid #e0e0e0;
+  border: 0.8rpx solid #e2e1e1;
   border-radius: 15rpx;
 }
 

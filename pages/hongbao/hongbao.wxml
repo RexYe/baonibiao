@@ -64,7 +64,7 @@
 
   <view class="receiveInfo">
     <view class="info-header">
-      <view id="rec-acount">共{{rpdetail.amountMoney}}元领取{{rpdetail.receiveAcount}}/{{rpdetail.amountNum}}个</view>
+      <view id="rec-acount">共{{rpdetail.amountMoney}}元领取{{rpdetail.receiveNum}}/{{rpdetail.amountNum}}个</view>
       <view id='rec-jubao'>举报</view>
     </view>
 
