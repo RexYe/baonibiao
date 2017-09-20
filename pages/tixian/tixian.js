@@ -11,7 +11,6 @@ Page({
         warning:''
     },
     onLoad: function () {
-<<<<<<< HEAD
       var that = this
       //获取全局变量==>余额
       that.setData({
