@@ -52,24 +52,24 @@ Page({
     // const t = this
     // //将时间戳从number转成string
     // // let timestamp = (Date.parse(new Date())/1000).toString();
-    // //调起微信支付
-    // wx.requestPayment({
-    //   //均从后台获取
-    //   'timeStamp': '',
-    //   'nonceStr': '',
-    //   'package': '',
-    //   'signType': 'MD5',
-    //   'paySign': '',
-    //   'success':function(res){
-    //     wx.showToast({
-    //         title: '支付成功',
-    //         icon: 'success',
-    //         duration: 2000
-    //     })
-    //   },
-    //   'fail':function(res){},
-    //   'complete':function(res){}
-    // })
+    //调起微信支付
+    wx.requestPayment({
+      //均从后台获取
+      'timeStamp': '',
+      'nonceStr': '',
+      'package': '',
+      'signType': 'MD5',
+      'paySign': '',
+      'success':function(res){
+        wx.showToast({
+            title: '支付成功',
+            icon: 'success',
+            duration: 2000
+        })
+      },
+      'fail':function(res){},
+      'complete':function(res){}
+    })
     // //点击支付前需判断是否符合支付条件
     // let pre_money = Number(t.data.inputValue_je)/Number(t.data.inputValue_sl)
     // if(pre_money>=1 && t.data.inputValue_je<=10){
@@ -191,16 +191,8 @@ Page({
 },
   onLoad: function () {
     var that = this
-    //获取全局变量==>余额
     that.setData({
       userInfo: app.G.userInfo
     })
-    //调用应用实例的方法获取全局数据
-    // app.getUserInfo(function(userInfo){
-    //   //更新数据
-    //   that.setData({
-    //     userInfo:userInfo
-    //   })
-    // })
   }
 })
