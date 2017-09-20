@@ -22,6 +22,28 @@
           </view>
         </view>
       </view>
+      <view class="hongbaodetail" bindtap="bindRedpaperlistTap">
+          <text>{{detailtitle}}</text>
+      </view>
+      <view class="{{redpaperlist}}">
+          <scroll-view class="redpaperscroll" scroll-y="{{true}}">
+              <view class="redpaper-item" wx:for="{{shoudao_list}}" wx:key="{{shoudao_list}}">
+                  <image src="{{item.imgurl}}" class="redpaperitem-left"></image>
+                  <view class="redpaperitem-center">
+                      <text>{{item.hongbaoname}}</text>
+                      <text>{{item.time}}</text>
+
+                  </view>
+                  <view class="redpaperitem-right">
+                      <text>{{item.money}}</text>
+                      <text>{{item.lingqu}}</text>
+                  </view>
+              </view>
+          </scroll-view>
+      </view>
+      <view class="footer-problems">
+        <text bindtap="bindProblemTap">常见问题</text>
+      </view>
     </swiper-item>
     <swiper-item data-id="shoudao">
       <view class="record-detail">
@@ -40,9 +62,29 @@
           </view>
         </view>
       </view>
+      <view class="hongbaodetail" bindtap="bindRedpaperlistTap">
+          <text>{{detailtitle}}</text>
+      </view>
+      <view class="{{redpaperlist}}">
+          <scroll-view class="redpaperscroll" scroll-y="{{true}}">
+              <view class="redpaper-item" wx:for="{{shoudao_list}}" wx:key="{{shoudao_list}}">
+                  <image src="{{item.imgurl}}" class="redpaperitem-left"></image>
+                  <view class="redpaperitem-center">
+                      <text>{{item.hongbaoname}}</text>
+                      <text>{{item.time}}</text>
+
+                  </view>
+                  <view class="redpaperitem-right">
+                      <text>{{item.money}}</text>
+                      <text>{{item.lingqu}}</text>
+                  </view>
+              </view>
+          </scroll-view>
+      </view>
+      <view class="footer-problems">
+        <text bindtap="bindProblemTap">常见问题</text>
+      </view>
     </swiper-item>
   </swiper>
-  <view class="footer-problems">
-    <text bindtap="bindProblemTap">常见问题</text>
-  </view>
+
 </view>
