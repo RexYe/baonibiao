@@ -1,4 +1,4 @@
-import {getWindowH} from '../../utils/util'
+import {getWindowH,_base64ToArrayBuffer} from '../../utils/util'
 var testUserInfo = {
   avatarUrl:'http://lvzu-imgs.oss-cn-hangzhou.aliyuncs.com/%E4%B8%8B%E8%BD%BD.png',
   nickName:'lvzu1111111111111111111111',
@@ -68,8 +68,11 @@ Page({
     buttonStr:'按住说出以上口令领取赏金',
     type:'',
     rpid:'first_test',
+    audioSrc:''
   },
-
+  test:function (e) {
+    console.log(e);
+  },
   //事件处理函数
   onLoad: function () {
     var _this = this
@@ -86,17 +89,16 @@ Page({
       rpid : 123,
     }
     //请求列表数据
-    
-    wx.request({
-      url: `${app.G.REQPREFIX}/api/hongbao/one`, 
-      data: app.GetReqParam(rpReqParam),
-      header: {
-          'content-type': 'application/json' // 默认值
-      },
-      success: function(res) {
-        console.log(res.data)
-      }
-    })
+    // wx.request({
+    //   url: `${app.G.REQPREFIX}/api/hongbao/one`, 
+    //   data: app.GetReqParam(rpReqParam),
+    //   header: {
+    //       'content-type': 'application/json' // 默认值
+    //   },
+    //   success: function(res) {
+    //     console.log(res.data)
+    //   }
+    // })
 
     //下载音频
     // wx.downloadFile({
@@ -130,6 +132,7 @@ Page({
 
   startRec:function () {
     var _this = this
+    var _data = this.data
     wx.stopVoice()
     this.setData({
       voiceFlags:new Array(_this.data.userList.length).fill(false)
@@ -142,9 +145,19 @@ Page({
       wx.startRecord({
         success: function(res) {
           var tempFilePath = res.tempFilePath
-          // _this.setData({
-          //     tempVoicePath:tempFilePath,
-          // })
+          
+          // var blob = new Blob(tempFilePath)
+          // var fs = new FileReader()
+          // fs.readAsArrayBuffer(blob)
+          //  var audioCtx = new AudioContext()
+
+          
+          //  wx.playVoice({
+          //     filePath: tempFilePath,
+          //     complete: function(){}
+          //   })
+
+          
            wx.uploadFile({
             url: `${app.G.REQPREFIX}/api/hongbao/qiang`, //仅为示例，非真实的接口地址
             filePath: tempFilePath,
@@ -154,23 +167,41 @@ Page({
               '_id': app.G.userInfo._id,
             },
             success: function(res){
+              // 获取arraybuffer做后续分析
               console.log(res);
-              //do something
+              // myAnalyse(res.data)
             },
-            complete:function (res) {
-              console.log(res);
-            },
-            fail:function (res) {
-              console.log(res);
-            }
+
           })
           
         },
-      })
-      
+      })      
     })
-    
+  
   },
+  
+  myAnalyse:function (arraybuffer) {
+    var audioCtx =  new AudioContext()
+    var sourceNode = audioCtx.createBufferSource();
+    var analyser = audioContext.createAnalyser();
+
+    var audioBuffer
+    var arrayBuffer = new ArrayBuffer(res.data)
+    audioCtx.decodeAudioData(arrayBuffer).then(function(res){
+      audioBuffer = res
+    })
+    sourceNode.buffer = audioBuffer;
+    //若有声音，则表示读取成功
+    souceNode.start(0);
+    //为了将音频在播放前截取，所以要把analyser插在audioBufferSouceNode与audioContext.destination之间
+    sourceNode.connect(analyser);
+    analyser.connect(audioContext.destination);
+    var hzArray = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(hzArray);
+    console.log(hzArray);
+    return hzArray
+  },
+  
   
   stopRec:function () {
      wx.stopRecord()
