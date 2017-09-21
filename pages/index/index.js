@@ -24,26 +24,26 @@ Page({
     available_balance:2.00,
     //付款总金额,单位为分
     cash:0,
-    choose_type_img:'./img/红包.png',
-    choose_type_text:'飙高音',
+    choose_type_img:'./img/飙红包.png',
+    choose_type_text:'飙红包',
     choose_type_div_if:false,
     red_packet_input_type:'0',
     hongbao_type:[
       {
-        type:'飙高音',
-        imgsrc:'./img/红包.png'
+        type:'飙红包',
+        imgsrc:'./img/飙红包.png'
       },
       {
         type:'唱红包',
-        imgsrc:'./img/红包.png'
+        imgsrc:'./img/唱红包.png'
       },
       {
         type:'提问红包',
-        imgsrc:'./img/红包.png'
+        imgsrc:'./img/提问红包.png'
       },
       {
         type:'悬赏红包',
-        imgsrc:'./img/红包.png'
+        imgsrc:'./img/悬赏红包.png'
       }
     ],
     wx_request_data:{},
@@ -59,9 +59,12 @@ Page({
   choose_type_done: function(e){
     const t = this;
     t.data.choose_type_text={'0':'飙红包','1':'唱红包','2':'提问红包','3':'悬赏红包'}[e.currentTarget.dataset.id] || '飙红包';
+    let imgsrc_text = t.data.choose_type_text
+    let imgsrc = './img/'+imgsrc_text+'.png'
     t.setData({
       input_div_if:t.data.choose_type_text,
       choose_type_div_if:false,
+      choose_type_img:imgsrc,//图片路径
       choose_type_text:t.data.choose_type_text,
       red_packet_input_type:e.currentTarget.dataset.id,
       //选择红包类型时清空data中的input值

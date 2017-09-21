@@ -5,10 +5,10 @@
       <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
     </view>
     <view class="warning" wx:if="{{warningShow}}">{{warning}}</view>
-    <view class="choose_type">
+    <view class="choose_type" bindtap="choose_type_div">
       <image src="{{choose_type_img}}" ></image>
       <text>{{choose_type_text}}</text>
-      <text bindtap="choose_type_div">请选择红包类型</text>
+      <text id="choose_type_text">点击选择红包类型</text>
     </view>
     <view class="input-div" wx:if="{{input_div_if == '飙红包'}}">
       <view class="section">

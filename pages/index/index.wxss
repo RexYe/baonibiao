@@ -6,21 +6,26 @@ padding: 0;
 }
 .index-container{
   width: 100%;
-  height: 1200rpx;
+  height: 1110rpx;
   background: #f1f1f1;
 }
 .index-container .choose_type{
-  font-size: 26rpx;
+  color: #e25d55;
+  font-size: 34rpx;
   padding-top: 100rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 200rpx;
+  height: 180rpx;
 }
 .index-container .choose_type image{
-  width: 80rpx;
-  height: 80rpx;
+  width: 100rpx;
+  height: 100rpx;
+}
+.index-container .choose_type #choose_type_text{
+  font-size: 20rpx;
+  color: #808080;
 }
 .index-container .send-red-packet{
   position: absolute;
@@ -28,26 +33,29 @@ padding: 0;
   left: 0;
   right: 0;
   width: 680rpx;
-  height: 980rpx;
+  height: 900rpx;
   background: white;
   margin: auto;
-  box-shadow: 2rpx 4rpx 2rpx 2rpx #afafaf;
+  box-shadow: 4rpx 6rpx 2rpx 2rpx #afafaf;
 }
 .index-container .choose_type_div{
   z-index: 100;
   position: absolute;
-  top: 10rpx;
+  top: 0;
   left: 0;
   right: 0;
-  width: 700rpx;
-  height: 1020rpx;
-  background: #afafaf;
-  margin: auto;
-  box-shadow: 2rpx 4rpx 2rpx 2rpx #afafaf;
+  width: 100%;
+  height: 100%;
+  background: white;
+  padding: 80rpx;
 }
 .index-container .choose_type_div .hongbao_type{
-  margin: 40rpx;
+  width: 220rpx;
+  height: 240rpx;
+  margin: 30rpx;
+  align-items: center;
   display: inline-flex;
+  justify-content: center;
   flex-direction: row;
 }
 .index-container .choose_type_div .hongbao_type .type_container{
@@ -87,7 +95,7 @@ padding: 0;
 }
 .index-container .send-red-packet .input-div{
   width: 84%;
-  height: 80%;
+  height: 68%;
   margin: 0 auto;
   padding-top: 30rpx;
   display: flex;
@@ -96,6 +104,7 @@ padding: 0;
 .index-container .send-red-packet .input-div button{
   margin-top: 50rpx;
   background-color: #e25d55;
+  width: 100%;
 }
 .index-container .send-red-packet .input-div .section{
   font-size: 30rpx;
