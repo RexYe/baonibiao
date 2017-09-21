@@ -1,5 +1,5 @@
 <view class="receive-container">
-
+  
   <view class="receive-main" style="width:100%;height:{{mainH}}">
 
       <image id="headpic-img"
@@ -7,7 +7,7 @@
         mode='scaleToFill'
         lazy-load=true
       ></image>
-
+      
       <view id="username">{{userInfo.nickName}}</view>
 
       <view class="rp-content">
@@ -16,7 +16,7 @@
         mode='scaleToFill'
         lazy-load=true
         ></image>
-        <view id="sing-str">{{singStr}}</view>
+        <view id="sing-str">{{content}}</view>
       </view>
 
       <button id="rec-button"
@@ -25,7 +25,10 @@
       size="default"
       disabled="false"
       bindtouchstart="startRec"
-      bindtouchend="stopRec">按住说出以上口令领取赏金</button>
+      bindtouchmove="stopRec"
+      bindtouchend="stopRec"
+      >{{buttonStr}}</button>
+      <!-- bindtap="hint" -->
 
       <button id="rec-button-over"
       wx:if="{{ !rpdetail.flag }}"

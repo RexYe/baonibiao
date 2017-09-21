@@ -59,12 +59,15 @@ var app = getApp()
 Page({
   data: {
     userInfo:'',//发红包人的信息 包含头像和昵称
-    singStr:'',//红包的语音内容
+    content:'',//红包的语音内容
     rpdetail:'',//红包领取详情
     userList:'',//红包领取用户
     voiceFlags:'',//用于设置用户列表语音播放
     tempVoicePath:'',//测试用临时语音目录
     mainH:getWindowH()*0.66+'px',//设备的高设置红包界面的大小
+    buttonStr:'按住说出以上口令领取赏金',
+    type:'',
+    rpid:'first_test',
   },
 
   //事件处理函数
@@ -73,27 +76,27 @@ Page({
     var _data = this.data
     var rpReqData = {}
     
-    // this.userInfo = app.G.userInfo
-    this.userInfo = testUserInfo
+    this.userInfo = app.G.userInfo
+    // this.userInfo = testUserInfo
     this.setData({
       userInfo:this.userInfo
     })
     
-    rpReqData = {
-      // rpid = ;
+    var rpReqParam = {
+      rpid : 123,
     }
-      
     //请求列表数据
-    // wx.request({
-    //   url: '请求红包信息地址', 
-    //   data: rpReqData,
-    //   header: {
-    //       'content-type': 'application/json' // 默认值
-    //   },
-    //   success: function(res) {
-    //     console.log(res.data)
-    //   }
-    // })
+    
+    wx.request({
+      url: `${app.G.REQPREFIX}/api/hongbao/one`, 
+      data: app.GetReqParam(rpReqParam),
+      header: {
+          'content-type': 'application/json' // 默认值
+      },
+      success: function(res) {
+        console.log(res.data)
+      }
+    })
 
     //下载音频
     // wx.downloadFile({
@@ -103,9 +106,14 @@ Page({
     //   }
     // })
     
-
+    this.data.type = 2
+    var buttonStr={'0':'飚出你的最高音领取红包',
+                   '1':'唱出以上的歌词领取红包',
+                   '2':'回答以上的问题领取红包',
+                   '3':'说出以上的秘密领取红包'}[this.data.type];
+    
     this.setData({
-      singStr:'生日快乐生日快乐',
+      content:'生日快乐生日快乐',
       rpdetail:{
         amountMoney:'1',
         receiveNum:'0',
@@ -114,6 +122,8 @@ Page({
       },
       userList:userList,
       voiceFlags:new Array(userList.length).fill(false),
+      type:'1',
+      buttonStr:buttonStr
     })
 
   },
@@ -132,9 +142,29 @@ Page({
       wx.startRecord({
         success: function(res) {
           var tempFilePath = res.tempFilePath
-          _this.setData({
-              tempVoicePath:tempFilePath,
+          // _this.setData({
+          //     tempVoicePath:tempFilePath,
+          // })
+           wx.uploadFile({
+            url: `${app.G.REQPREFIX}/api/hongbao/qiang`, //仅为示例，非真实的接口地址
+            filePath: tempFilePath,
+            name: 'file',//后台获取文件key
+            formData:{
+              'rpid': _this.data.rpid,
+              '_id': app.G.userInfo._id,
+            },
+            success: function(res){
+              console.log(res);
+              //do something
+            },
+            complete:function (res) {
+              console.log(res);
+            },
+            fail:function (res) {
+              console.log(res);
+            }
           })
+          
         },
       })
       
