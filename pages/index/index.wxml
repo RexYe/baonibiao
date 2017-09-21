@@ -5,10 +5,15 @@
       <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
     </view>
     <view class="warning" wx:if="{{warningShow}}">{{warning}}</view>
+    <view class="choose_type">
+      <image src="{{choose_type_img}}" ></image>
+      <text>{{choose_type_text}}</text>
+      <text bindtap="choose_type_div">请选择红包类型</text>
+    </view>
     <view class="input-div">
-      <view class="section" wx:for="{{red_packet_input}}" wx:key="unique" >
+      <view class="section" wx:for="{{red_packet_input[red_packet_input_type]}}" wx:key="unique" >
         <text class="title">{{item.menu_name}}</text>
-        <input placeholder-style="color:#bbbbbb" id="{{item.id}}" placeholder="{{item.placeholder}}" type="{{item.input_type}}" confirm-type="{{item.confirm_type}}" bindinput="bindKeyInput" maxlength="{{item.maxlength}}"/>
+        <input placeholder-style="color:#bbbbbb" id="{{item.id}}" placeholder="{{item.placeholder}}" type="{{item.input_type}}" confirm-type="{{item.confirm_type}}" bindinput="bindKeyInput" maxlength="{{item.maxlength}}" value="{{inputTxt[index]}}"/>
         <text class="tips">{{item.tips}}</text>
          <image src="{{item.tips_src}}" bindtap="how_to_use"></image>
       </view>
@@ -16,4 +21,12 @@
       <button type="warn" size="default" bindtap="build_red_packet">{{build_buttonValue}}</button>
     </view>
   </view>
+    <view class="choose_type_div" wx:if="{{choose_type_div_if}}">
+      <view class="hongbao_type" wx:for="{{hongbao_type}}" wx:key="unique">
+        <view class="type_container" bindtap="choose_type_done" data-id="{{index}}">
+          <image src="{{item.imgsrc}}"></image>
+          <text>{{item.type}}</text>
+        </view>
+      </view>
+    </view>
 </view>

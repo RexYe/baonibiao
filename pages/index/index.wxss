@@ -9,21 +9,61 @@ padding: 0;
   height: 1200rpx;
   background: #f1f1f1;
 }
+.index-container .choose_type{
+  font-size: 26rpx;
+  padding-top: 100rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 200rpx;
+}
+.index-container .choose_type image{
+  width: 80rpx;
+  height: 80rpx;
+}
 .index-container .send-red-packet{
   position: absolute;
   top: 100rpx;
   left: 0;
   right: 0;
   width: 680rpx;
-  height: 730rpx;
+  height: 980rpx;
   background: white;
   margin: auto;
   box-shadow: 2rpx 4rpx 2rpx 2rpx #afafaf;
 }
+.index-container .choose_type_div{
+  z-index: 100;
+  position: absolute;
+  top: 10rpx;
+  left: 0;
+  right: 0;
+  width: 700rpx;
+  height: 1020rpx;
+  background: #afafaf;
+  margin: auto;
+  box-shadow: 2rpx 4rpx 2rpx 2rpx #afafaf;
+}
+.index-container .choose_type_div .hongbao_type{
+  margin: 40rpx;
+  display: inline-flex;
+  flex-direction: row;
+}
+.index-container .choose_type_div .hongbao_type .type_container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.index-container .choose_type_div .hongbao_type image{
+  width: 80rpx;
+  height: 80rpx;
+}
 .index-container .send-red-packet .warning{
   color: white;
   position: absolute;
-  top: 90rpx;
+  top: 290rpx;
   width: 84%;
   height: 44rpx;
   line-height: 44rpx;
@@ -49,7 +89,7 @@ padding: 0;
   width: 84%;
   height: 80%;
   margin: 0 auto;
-  padding-top: 140rpx;
+  padding-top: 30rpx;
   display: flex;
   flex-direction: column;
 }
