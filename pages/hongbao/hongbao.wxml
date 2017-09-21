@@ -81,6 +81,10 @@
               <image class="rsp-gender" wx:if="{{item.gender==1}}" src="./resource/man.svg"></image>
               <image class="rsp-gender" wx:else src="./resource/women.svg"></image>
             </view>
+            
+            <audio src="{{audioSrc}}" bindtap="test" id="testAudio">
+            </audio>
+            
             <view class="rsp-voice" bindtap="playMusic" data-id="{{index}}">
               <view class="rsp-voice-str" wx:if="{{voiceFlags[index]}}">播放中</view>
               <view class="rsp-voice-str" wx:else>{{item.voiceTime}}''</view>
