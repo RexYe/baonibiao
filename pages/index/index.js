@@ -1,28 +1,22 @@
 //index.js
 //发送红包页面
 var app = getApp()
-var jine={
-    menu_name:'金额（元）',
-    id:'je',
-    placeholder:'填写金额',
-    input_type:'digit',
-    confirm_type:'next',
-    maxlength:4
-  }
+
 Page({
   data: {
-    inputTxt:[
-      '',
-      '',
-      ''
-      // inputValue_kl:'',
-      // inputValue_je:'',
-      // inputValue_sl:'',
-    ],
+    input_div_if:'飙红包',
+    inputTxt_jine:'',
+    inputTxt_renshu:'',
+    inputTxt_shuliang:'',
+    inputTxt_wenti:'',
+    inputTxt_xswenti:'',
+    cannotsend_jine:1,//判断金额是否符合发送红包要求
+    cannotsend_renshu:1,//判断人数是否符合发送红包要求
+    cannotsend_shuliang:1,//判断红包数量是否符合发送红包要求
+    type:'',//传给服务器的红包类型
+    is_need_wxpay:'',//是否需要微信支付
     //服务费
     charge_money:'0.00',
-    //按钮内的文本
-    build_buttonValue:'生成红包',
     warning:'',
     //是否显示警告栏
     warningShow:false,
@@ -52,77 +46,7 @@ Page({
         imgsrc:'./img/红包.png'
       }
     ],
-    red_packet_input:[
-      // {
-      //   menu_name:'设置口令',
-      //   id:'kl',
-      //   placeholder:'请输入口令',
-      //   input_type:'text',
-      //   confirm_type:'next',
-      //   maxlength:8,
-      //   tips:'小伙伴们说对口令即可获得随机红包 ',
-      //   tips_src:'./img/问号.png'
-      // },
-      [
-        jine,
-        {
-          menu_name:'人数',
-          id:'rs',
-          placeholder:'填写人数',
-          input_type:'number',
-          maxlength:2
-        }
-      ],
-      [
-        {
-          menu_name:'选择歌词',
-          placeholder:'请输入歌词',
-          id:'geci',
-          maxlength:8,
-        },
-        jine,
-        {
-          menu_name:'数量',
-          id:'sl',
-          placeholder:'填写数量',
-          input_type:'number',
-          maxlength:2
-        }
-      ],
-      [
-        {
-          menu_name:'填写问题',
-          placeholder:'请输入问题',
-          id:'wenti',
-          id:'wenti',
-          maxlength:8,
-        },
-        jine,
-        {
-          menu_name:'数量',
-          id:'sl',
-          placeholder:'填写数量',
-          input_type:'number',
-          maxlength:2
-        }
-      ],
-      [
-        {
-          menu_name:'填写悬赏问题',
-          placeholder:'请输入悬赏问题',
-          id:'xs_wenti',
-          maxlength:8,
-        },
-        jine,
-        {
-          menu_name:'数量',
-          id:'sl',
-          placeholder:'填写数量',
-          input_type:'number',
-          maxlength:2
-        }
-      ]
-    ],
+    wx_request_data:{},
     userInfo: {}
   },
   //事件处理函数
@@ -134,206 +58,257 @@ Page({
   },
   choose_type_done: function(e){
     const t = this;
-    t.data.choose_type_text={'0':'飙红包','1':'唱红包','3':'猜红包','4':'提问红包'}[e.currentTarget.dataset.id] || '飙红包';
+    t.data.choose_type_text={'0':'飙红包','1':'唱红包','2':'提问红包','3':'悬赏红包'}[e.currentTarget.dataset.id] || '飙红包';
     t.setData({
+      input_div_if:t.data.choose_type_text,
       choose_type_div_if:false,
       choose_type_text:t.data.choose_type_text,
       red_packet_input_type:e.currentTarget.dataset.id,
-      inputTxt:''
+      //选择红包类型时清空data中的input值
+      inputTxt_jine:'',
+      inputTxt_renshu:'',
+      inputTxt_shuliang:'',
+      inputTxt_wenti:'',
+      inputTxt_xswenti:'',
+      charge_money:'0.00'
     })
   },
   build_red_packet: function() {
         const t = this;
-        // wx.navigateTo({
-        //   url: '../hongbao/hongbao'
-        // })
 
-        //点击支付前需判断是否符合支付条件
-        let pre_money = Number(t.data.inputValue_je)/Number(t.data.inputValue_sl)
-        if(pre_money>=1 && t.data.inputValue_je<=10){
-            t.setData({
-              warning:''
-            })
+        //先判断红包类型，根据红包类型判断是否符合条件
+        if(t.data.input_div_if == '飙红包'){
+              t.data.type = 'bgy'
+              t._jineAvailable(t.data.inputTxt_jine)
+              t._renshuAvailable(t.data.inputTxt_renshu)
+              if(t.data.cannotsend_jine==0 && t.data.cannotsend_renshu==0){
+                      t._is_need_wxpay()
+                      t.data.wx_request_data={
+                            is_need_wxpay:t.data.is_need_wxpay,
+                            cash:t.data.cash,
+                            type:t.data.type,
+                            inputTxt_renshu:t.data.inputTxt_renshu
+                      },
+                      t._gotoPay()
+              }
         }
-        if(this.data.warning.length>0) {
-            wx.showModal({
-              title: '提示',
-              content: this.data.warning,
-              showCancel: false,
-            })
+        if(t.data.input_div_if == '唱红包'){
+              t.data.type = 'chb'
+              t._jineAvailable(t.data.inputTxt_jine)
+              t._shuliangAvailable(t.data.inputTxt_shuliang)
+              if(t.data.cannotsend_jine==0 && t.data.cannotsend_shuliang==0){
+                      t._is_need_wxpay()
+                      t.data.wx_request_data={
+                            is_need_wxpay:t.data.is_need_wxpay,
+                            cash:t.data.cash,
+                            type:t.data.type,
+                            inputTxt_shuliang:t.data.inputTxt_shuliang
+                      }
+                      t._gotoPay()
+              }
         }
-        if(this.data.warning.length === 0){
-          //如余额大于等于支付金额，则无需调用微信支付。
-          if(t.data.cash <= t.data.available_balance){
-
-          }
-          //如余额小于需支付金额，则调用微信支付，并且支付的金额为抵消余额后的金额
-          else{
-
-          }
-            // console.log(this.data);
-            // 将时间戳从number转成string
-            // let timestamp = (Date.parse(new Date())/1000).toString();
-            // wx.request({
-            //       url: `${app.G.REQPREFIX}/api/wx/payment`,
-            //       method: 'GET',
-            //       data: {
-            //         cash:t.data.cash,   //订单金额
-            //         openid: self.data.openid
-            //       },
-            //       header: {
-            //           'content-type': 'application/json'
-            //       },
-            //       success: function(res) {
-            //         //调起微信支付
-            //         wx.requestPayment({
-            //           'timeStamp': timestamp,
-            //           'nonceStr': '',
-            //           'package': 'prepay_id='+res.data.prepay_id,
-            //           'signType': 'MD5',
-            //           'paySign': res.data._paySignjs,
-            //           'success':function(res){
-            //             wx.showToast({
-            //                 title: '支付成功',
-            //                 icon: 'success',
-            //                 duration: 2000
-            //             })
-            //           },
-            //           'fail':function(res){
-            //             wx.showToast({
-            //                 title: '支付失败',
-            //                 icon: 'loading',
-            //                 duration: 2000
-            //             })
-            //           },
-            //           'complete':function(res){}
-            //         })
-            //       },
-            //       fail: function(err) {
-            //           console.log(err)
-            //       }
-            //         })
+        if(t.data.input_div_if == '提问红包'){
+              t.data.type = 'twhb'
+              t._jineAvailable(t.data.inputTxt_jine)
+              t._shuliangAvailable(t.data.inputTxt_shuliang)
+              if(t.data.cannotsend_jine==0 && t.data.cannotsend_shuliang==0){
+                      t._is_need_wxpay()
+                      t.data.wx_request_data={
+                            wenti:t.data.inputTxt_wenti,
+                            is_need_wxpay:t.data.is_need_wxpay,
+                            cash:t.data.cash,
+                            type:t.data.type,
+                            inputTxt_shuliang:t.data.inputTxt_shuliang
+                      }
+                      t._gotoPay()
+              }
+        }
+        if(t.data.input_div_if == '悬赏红包'){
+              t.data.type = 'xshb'
+              t._jineAvailable(t.data.inputTxt_jine)
+              t._shuliangAvailable(t.data.inputTxt_shuliang)
+              if(t.data.cannotsend_jine==0 && t.data.cannotsend_shuliang==0){
+                      t._is_need_wxpay()
+                      t.data.wx_request_data={
+                            xswenti:t.data.inputTxt_xswenti,
+                            is_need_wxpay:t.data.is_need_wxpay,
+                            cash:t.data.cash,
+                            type:t.data.type,
+                            inputTxt_shuliang:t.data.inputTxt_shuliang
+                      }
+                      t._gotoPay()
+              }
         }
   },
   how_to_use: function() {
-    wx.navigateTo({
-      url: '../problems/problems'
-    })
+      wx.navigateTo({
+        url: '../problems/problems'
+      })
+  },
+  _showModal: function(content) {
+      wx.showModal({
+        title: '提示',
+        content: content,
+        showCancel: false,
+      })
+  },
+  _jineAvailable: function(jine){
+      if(jine > 10) {
+              this.data.cannotsend_jine += 1
+              this._showModal('红包金额不能超过10元')
+      }
+      else if(jine < 1) {
+              this.data.cannotsend_jine += 1
+              this._showModal('红包最低金额不得少于1元')
+      }
+      else{
+              this.data.cannotsend_jine = 0
+      }
+  },
+  _renshuAvailable: function(renshu){
+      if(renshu > 20) {
+              this.data.cannotsend_renshu += 1
+              this._showModal('参与人数不得超过20人')
+      }
+      else if(renshu < 1) {
+              this.data.cannotsend_renshu += 1
+              this._showModal('请填写参与人数')
+      }
+      else{
+              this.data.cannotsend_renshu = 0
+      }
+  },
+  _shuliangAvailable: function(shuliang){
+      if(shuliang > 10) {
+              this.data.cannotsend_shuliang += 1
+              this._showModal('红包数量不得超过10个')
+      }
+      else if(shuliang < 1) {
+              this.data.cannotsend_shuliang += 1
+              this._showModal('请填写红包个数')
+      }
+      else{
+              this.data.cannotsend_shuliang = 0
+      }
+  },
+  _is_need_wxpay: function(type){
+          const t = this
+          //如余额大于等于支付金额，则无需调用微信支付。
+          if(t.data.all_money <= t.data.available_balance){
+              t.data.is_need_wxpay = false;
+          }
+          //如余额小于需支付金额，则调用微信支付，并且支付的金额不抵消余额，为全额
+          else{
+              t.data.is_need_wxpay = true;
+          }
+  },
+  _gotoPay: function(){
+      const t = this
+      console.log();
+                // 将时间戳从number转成string
+                let timestamp = (Date.parse(new Date())/1000).toString();
+
+                wx.request({
+                      // url: `${app.G.REQPREFIX}/api/wx/payment`,
+                      method: 'GET',
+                      data: t.data.wx_request_data,
+                      header: {
+                          'content-type': 'application/json'
+                      },
+                      success: function(res) {
+                        if(res.data.weizhifu){
+                            t._requestPayment(res)
+                        }
+                        else{
+                            let _redid = res.data._redid
+                            //若已支付，则直接跳转到wwj分享页面
+                            wx.navigateTo({
+                              //将_redid参数传进去
+                              url: '../sharepage/sharepage?_redid=_redid'
+                            })
+                        }
+                      },
+                      fail: function(err) {
+                          console.log(err)
+                      }
+                })
   },
   bindKeyInput: function(e) {
-    console.log(e);
     const t = this
-
-    //口令
-    if(e.target.id === 'kl'){
-      // t.data.inputTxt[0]= e.detail.value
-      // t.setData({
-      //   inputTxt: t.data.inputTxt
-      // })
-    }
-
     //红包金额
-    if(e.target.id === 'je') {
-      t.data.inputTxt[1]= e.detail.value
-      //红包金额为空时,0或者未填
-      if(e.detail.value == false) {
-        t.setData({
-          warning:'请填写正确的红包金额'
-        })
-      }
-      //若红包金额不为空
-      else{
-        //金额>10时
-        if(Number(e.detail.value)>10) {
-          t.setData({
-            warningShow: true,
-            warning:'红包金额不能超过10元！'
-          })
-        }
-        //金额<1时
-        else if(Number(e.detail.value)<1){
-          t.setData({
-            warningShow: true,
-            warning:'每人可得的平均红包金额不能少于1元！'
-          })
-        }
-        //金额为1~10之间时
-        else{
-          let enoughFlag1 = Number(e.detail.value)/Number(t.data.inputValue_sl)
-          if(enoughFlag1<1){
+    if(e.target.id === 'jine'){
+            t.data.inputTxt_jine = Number(e.detail.value)
+            //传服务器的cash为红包金额，不包括服务费，单位为分
+            t.data.cash = Number(e.detail.value)*100
+            //服务费为6%，保留两位小数
+            let _charge_money = (Number(e.detail.value)/16.6).toFixed(2)
+            t.data.all_money = Number(_charge_money)+Number(e.detail.value)
             t.setData({
-              warningShow: true,
-              warning:'每人可得的平均红包金额不能少于1元'
+                    charge_money:_charge_money
             })
-          }
-          else{
-            t.setData({
-              warningShow: false,
-            })
-          }
-        }
-      }
-      //服务费为4%，保留两位小数
-      let charge_money = (Number(e.detail.value)/16.6).toFixed(2)
-      //需要支付的总额=服务费+红包金额
-      let all_money = Number(charge_money)+Number(e.detail.value)-Number(t.data.available_balance)
-      if(isNaN(all_money)){
-        all_money = 0
-      }
-      t.data.inputTxt[0]= e.detail.value
-      //当计算出总额后，生成红包的按钮文本改成 ‘还需支付**元’
-      if(all_money !== 0){
-        t.setData({
-          // inputTxt: t.data.inputTxt,
-          inputValue_je: Number(e.detail.value),
-          charge_money: charge_money,
-          build_buttonValue: '还需支付'+all_money+'元',
-          cash: all_money*100
-        },function () {
-            console.log(t.data.inputTxt);
-        })
-      }
-      else{
-        t.setData({
-          inputValue_je: Number(e.detail.value),
-          charge_money: charge_money,
-          build_buttonValue: '生成红包'
-        })
-      }
+    }
+    //人数
+    if(e.target.id === 'renshu') {
+            t.data.inputTxt_renshu= Number(e.detail.value)
     }
     //红包数量
-    if(e.target.id === 'sl') {
-      //数量为0或者空
-      if(e.detail.value == false) {
-        t.setData({
-          warning:'请填写正确的红包个数'
-        })
-      }
-      //红包个数已填
-      else {
-        //判断最低金额
-        let enoughFlag2 = t.data.inputValue_je/Number(e.detail.value)
-        if(enoughFlag2 < 1) {
-          t.setData({
-            warningShow: true,
-            warning:'每人可得的平均红包金额不能少于1元'
-          })
-        }
-        if(enoughFlag2 >= 1) {
-          t.setData({
-            warningShow: false,
-          })
-        }
-        t.setData({
-          inputValue_sl: e.detail.value
-        })
-      }
+    if(e.target.id === 'shuliang') {
+            t.data.inputTxt_shuliang= Number(e.detail.value)
     }
+    if(e.target.id === 'tianxiewenti'){
+            t.data.inputTxt_wenti= e.detail.value
+    }
+    if(e.target.id === 'xswenti'){
+            t.data.inputTxt_xswenti= e.detail.value
+    }
+},
+_requestPayment: function(res1){
+      const t = this
+      wx.requestPayment({
+        'timeStamp': res1.data.timestamp,
+        'nonceStr': res1.data.nonceStr,
+        'package': 'prepay_id='+res1.data.prepay_id,
+        'signType': 'MD5',
+        'paySign': res.data._paySignjs,
+        'success':function(res){
+              //充值成功后发送请求返回一个_redid
+              t._return_redid(res1)
+        },
+        'fail':function(res){
+          wx.showToast({
+              title: '支付失败',
+              icon: 'loading',
+              duration: 2000
+          })
+        },
+        'complete':function(res){}
+      })
+},
+//返回服务器_redid请求
+_return_redid: function(){
+    wx.request({
+          // url: `${app.G.REQPREFIX}/api/wx/payment`,
+          method: 'POST',
+          data: res.data._redid,
+          header: {
+              'content-type': 'application/json'
+          },
+          success: function(res) {
+                wx.showToast({
+                    title: '支付成功',
+                    icon: 'success',
+                    duration: 2000
+                })
+          },
+          fail: function(err) {
+              console.log(err)
+          }
+            })
 },
   onLoad: function () {
     var that = this
     that.setData({
-      userInfo: app.G.userInfo
+        userInfo: app.G.userInfo
     })
   }
 })
