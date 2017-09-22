@@ -5,7 +5,7 @@ Page({
     data: {
         userInfo: {},//用户信息
         redid:'',//红包id
-        isFinished:true//红包是否领取完成
+        flag:true//红包是否领取完成
     },
 
     onLoad: function (option) {
@@ -13,7 +13,7 @@ Page({
         this.setData({
             userInfo:app.G.userInfo,
             redid:option._redid,
-            // isFinished:option.isFinished
+            flag:option.flag
         })
         // console.log(this.data.redid);
         //获取二维码
