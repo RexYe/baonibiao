@@ -25,8 +25,11 @@ Page({
     cash:0,
     choose_type_img:'./img/飙高音红包.png',
     choose_type_text:'飙高音红包',
-    choose_type_div_if:false,
+    choose_rkl_type_text:'',//发红包页显示的绕口令选项
+    choose_type_div_if:false,//选择红包类型弹窗
+    choose_rkl_div_if:false,//选择绕口令弹窗
     red_packet_input_type:'0',
+    rkl_input_type:'0',
     hongbao_type:[
       {
         type:'飙高音红包',
@@ -60,6 +63,23 @@ Page({
         type:'绕口令红包',
         imgsrc:'./img/绕口令红包.png'
       }
+    ],
+    rkl_type:[
+      {
+        type:'1.粉红墙上画凤凰，红凤凰，粉凤凰，粉红凤凰。',
+      },
+      {
+        type:'2.早招租，晚招租，总找周邹郑曾朱。',
+      },
+      {
+        type:'3.风吹藤动铜铃动，风停藤定铜铃静。',
+      },
+      {
+        type:'4.黑化肥发灰会挥发，灰化肥挥发会发黑。',
+      },
+      {
+        type:'5.妈妈卖麦，麦卖妈妈买袜。',
+      },
     ],
     wx_request_data:{},
     animationData:{},//动画数据
@@ -434,6 +454,23 @@ _getYuE_request: function(){
       wx.navigateTo({
           url: '../moreabouttype/moreabouttype'
      })
+  },
+  choose_rkl_func: function(){
+      const t = this;
+      t.setData({
+          choose_rkl_div_if: true
+      })
+  },
+  choose_rkl_type_done: function(e){
+      const t = this;
+      t.data.choose_rkl_type_text={'0':'绕口令1','1':'绕口令2','2':'绕口令3','3':'绕口令4','4':'绕口令5'}[e.currentTarget.dataset.id] || '绕口令1';
+      t.setData({
+        choose_rkl_type_text:t.data.choose_rkl_type_text,
+        rkl_input_type:e.currentTarget.dataset.id,
+      })
+      t.setData({
+          choose_rkl_div_if: false
+      })
   },
   onLoad: function () {
       var that = this
