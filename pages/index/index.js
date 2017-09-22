@@ -47,23 +47,69 @@ Page({
       }
     ],
     wx_request_data:{},
+    animationData:{},//动画数据
     userInfo: {}
   },
   //事件处理函数
   choose_type_div: function(){
       const t = this;
+      t._open_animation()
+
       t.setData({
-        choose_type_div_if:true
+        choose_type_div_if:true,
       })
+  },
+  //点击选择红包类型后弹出窗口的动画
+  _open_animation: function(){
+      // const t = this
+      var animation = wx.createAnimation({
+          duration: 400,
+          timingFunction: 'ease',
+      })
+    this.animation = animation
+    animation.translate(0.1, -900).step()
+    this.setData({
+        animationData:animation.export()
+    })
+    setTimeout(() =>{
+      animation.translate(1).step()
+      this.setData({
+      animationData:animation.export()
+    })}, 10)
+  },
+  //点击选择红包类型结束后关闭窗口的动画
+  _close_animation: function(){
+      const t = this
+      var animation = wx.createAnimation({
+          duration: 500,
+          timingFunction: 'ease',
+      })
+    t.animation = animation
+    animation.translate(0.1,900).step()
+    t.setData({
+        animationData:animation.export()
+    })
+    setTimeout(() =>{
+      animation.translate(1).step()
+      t.setData({
+      animationData:animation.export()
+    })}, 400)
   },
   choose_type_done: function(e){
     const t = this;
+    t._close_animation()
+    //0.3秒后隐藏选择菜单
+    setTimeout(()=>{
+      t.setData({
+          choose_type_div_if:false
+      })
+    },300)
     t.data.choose_type_text={'0':'飙红包','1':'唱红包','2':'提问红包','3':'悬赏红包'}[e.currentTarget.dataset.id] || '飙红包';
     let imgsrc_text = t.data.choose_type_text
     let imgsrc = './img/'+imgsrc_text+'.png'
     t.setData({
       input_div_if:t.data.choose_type_text,
-      choose_type_div_if:false,
+
       choose_type_img:imgsrc,//图片路径
       choose_type_text:t.data.choose_type_text,
       red_packet_input_type:e.currentTarget.dataset.id,
@@ -148,6 +194,17 @@ Page({
         url: '../problems/problems'
       })
   },
+  //点击取消选择红包类型
+  cancel_choose_type: function(){
+    const t = this
+    t._close_animation()
+    //0.3秒后隐藏选择菜单
+    setTimeout(()=>{
+      t.setData({
+          choose_type_div_if:false
+      })
+    },300)
+  },
   _showModal: function(content) {
       wx.showModal({
         title: '提示',
@@ -207,7 +264,12 @@ Page({
   },
   _gotoPay: function(){
       const t = this
-      console.log();
+      // console.log(1);
+      // wx.navigateTo({
+      //   //将_redid参数传进去
+      //   url: '../zhifuwancheng/zhifuwancheng?_redid=111'
+      // })
+      // return
                 // 将时间戳从number转成string
                 let timestamp = (Date.parse(new Date())/1000).toString();
 
@@ -224,10 +286,10 @@ Page({
                         }
                         else{
                             let _redid = res.data._redid
-                            //若已支付，则直接跳转到wwj分享页面
+                            //若已支付，则直接跳转到支付完成页面
                             wx.navigateTo({
                               //将_redid参数传进去
-                              url: '../sharepage/sharepage?_redid=_redid'
+                              url: '../zhifuwancheng/zhifuwancheng?_redid='+_redid
                             })
                         }
                       },
@@ -306,12 +368,18 @@ _return_redid: function(){
           fail: function(err) {
               console.log(err)
           }
-            })
+    })
 },
+//跳转到了解详情页面
+  to_know_more: function(){
+    wx.navigateTo({
+     url: '../moreabouttype/moreabouttype'
+   })
+  },
   onLoad: function () {
     var that = this
     that.setData({
         userInfo: app.G.userInfo
     })
-  }
+  },
 })

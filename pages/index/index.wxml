@@ -70,12 +70,19 @@
       <button type="warn" size="default" bindtap="build_red_packet">生成红包</button>
     </view>
   </view>
-    <view class="choose_type_div" wx:if="{{choose_type_div_if}}">
+    <view class="choose_type_div" wx:if="{{choose_type_div_if}}" animation="{{animationData}}">
+      <view class="choose_type_cancel">
+        <text>点击选择红包类型</text>
+      </view>
       <view class="hongbao_type" wx:for="{{hongbao_type}}" wx:key="unique">
         <view class="type_container" bindtap="choose_type_done" data-id="{{index}}">
           <image src="{{item.imgsrc}}"></image>
           <text>{{item.type}}</text>
+          <button type="primary" size="mini" catchtap="to_know_more">了解详情</button>
         </view>
+      </view>
+      <view class="cancel_img_div">
+        <image src="./img/取消.png" bindtap="cancel_choose_type"></image>
       </view>
     </view>
 </view>
