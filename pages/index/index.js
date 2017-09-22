@@ -47,11 +47,23 @@ Page({
       }
     ],
     wx_request_data:{},
+    animationData:{},//动画数据
     userInfo: {}
   },
   //事件处理函数
   choose_type_div: function(){
       const t = this;
+      // var animation = wx.createAnimation({
+      //      duration: 2000,//动画持续时间
+      //      timingFunction: 'ease',
+      //       timingFunction: 'linear',
+      //      transformOrigin: 'left top 0',
+      // })
+      // t.animation = animation
+      // animation.scale(1,1).opacity(0.6).step()
+      // t.setData({
+      //   animationData:animation.export()
+      // })
       t.setData({
         choose_type_div_if:true
       })
@@ -148,6 +160,13 @@ Page({
         url: '../problems/problems'
       })
   },
+  //点击取消选择红包类型
+  cancel_choose_type: function(){
+    const t = this
+    t.setData({
+      choose_type_div_if:false
+    })
+  },
   _showModal: function(content) {
       wx.showModal({
         title: '提示',
@@ -207,7 +226,12 @@ Page({
   },
   _gotoPay: function(){
       const t = this
-      console.log();
+      console.log(1);
+      wx.navigateTo({
+        //将_redid参数传进去
+        url: '../sharepage/sharepage?_redid=111'
+      })
+      return
                 // 将时间戳从number转成string
                 let timestamp = (Date.parse(new Date())/1000).toString();
 
@@ -227,7 +251,7 @@ Page({
                             //若已支付，则直接跳转到wwj分享页面
                             wx.navigateTo({
                               //将_redid参数传进去
-                              url: '../sharepage/sharepage?_redid=_redid'
+                              url: '../sharepage/sharepage?_redid='+_redid
                             })
                         }
                       },
@@ -306,12 +330,23 @@ _return_redid: function(){
           fail: function(err) {
               console.log(err)
           }
-            })
+    })
 },
   onLoad: function () {
     var that = this
     that.setData({
         userInfo: app.G.userInfo
     })
-  }
+  },
+  onShow: function(){
+
+ },
+//  rotateThenScale: function () {
+//   // 先旋转后放大
+//   this.animation.rotate(45).step()
+//   this.animation.scale(1, 1).step()
+//   this.setData({
+//     animationData: this.animation.export()
+//   })
+// },
 })
