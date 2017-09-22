@@ -3,15 +3,22 @@
     <view class="share">
         <view class="userinfo">
             <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
-            <text class="userinfo-nickname">{{userInfo.nickName}}发了一个语音口令</text>
-            <text class="kouling">谢谢老板</text>
+            <view class="userinfo-nickname">{{userInfo.nickName}}发了一个语音口令
+            <image src="./resources/money.svg"
+                mode='scaleToFill'
+                class="img">
+            </image>
+            </view>
+            <view class="kouling">谢谢老板</view>
         </view>
-        <!--这里放的是二维码,现在还没有秘钥,所以我先用一个按钮代替-->
-        <button type="default" class="kai">吕智兵页面的二维码</button>
-            <!--这里放置这个小程序的二维码-->
+
+        <view class="code">
+            <image src="./resources/code.jpg" mode="scaleToFill" class="code-img"></image>
+        </view>
         <view class="sbewm">
-            <button type="default" class="sbewm-btn">识别小程序二维码</button>
-            <text class="sbewm-cn">长按识别小程序</text>
+            <image src="./resources/code.svg" mode='scaleToFill' class="sbewm-code"></image>
+            <image src="./resources/Fingerprint-with-crosshair-focus.svg" mode='scaleToFill' class="sbewm-code"></image>
+            <view class="sbewm-cn">长按识别小程序,说口令领赏金</view>
         </view>
     </view>
 </view>
