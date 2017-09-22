@@ -11,7 +11,7 @@ App({
           that._storeUserInfo(uinfo, function(res1){
             // console.log('res1--->',res1);
             that.G.userInfo = res1;
-            console.log('global',that.G.userInfo);
+            // console.log('global',that.G.userInfo);
           })
         })
       }

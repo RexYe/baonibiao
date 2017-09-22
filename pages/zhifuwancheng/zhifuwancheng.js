@@ -3,13 +3,19 @@
 var app = getApp()
 Page({
     data: {
-        userInfo: {},
+        userInfo: {},//用户信息
+        redid:'',//红包id
+        isFinished:true//红包是否领取完成
     },
-    onLoad: function () {
+
+    onLoad: function (option) {
         //获取到用户信息
         this.setData({
-            userInfo:app.G.userInfo
+            userInfo:app.G.userInfo,
+            redid:option._redid,
+            // isFinished:option.isFinished
         })
+        // console.log(this.data.redid);
         //获取二维码
         // wx.request({
         // url:"https://api.weixin.qq.com/wxa/getwxacode?access_token=ACCESS_TOKEN",
@@ -24,14 +30,14 @@ Page({
     },
     //转发到群聊
     onShareAppMessage: function (res) {
+        const t = this;
         if (res.from === 'button') {
           // 来自页面内转发按钮
             //带上红包的id
             // let id = app.GetReqParam()
             return {
                 title: '送福利来咯',
-                // path: `/pages/hongbao/hongbao?${id}`,
-                path: "/pages/hongbao/hongbao",
+                path: `/pages/hongbao/hongbao?_redid=${this.data.redid}`,
                 success: function(res) {
                     wx.showShareMenu({
                         withShareTicket: true
@@ -65,6 +71,7 @@ Page({
         //     }
         //
         // })
+
         wx.navigateTo({
             url:'../sharepage/sharepage',
         })
@@ -72,7 +79,7 @@ Page({
     //我也试一试,跳转到抢红包页面
     shiyishi:function() {
         wx.navigateTo({
-            url:'../hongbao/hongbao'
+            url:`../hongbao/hongbao?_redid=${this.data.redid}`
         })
     },
 })

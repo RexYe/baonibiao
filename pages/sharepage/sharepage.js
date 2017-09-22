@@ -22,6 +22,10 @@ Page({
     },
     onShareAppMessage: function (res) {
         // 来自页面内转发按钮
+        return {
+            title: '红包来了',
+            path: '/pages/hongbao/hongbao'
+        }
         // if (res.from === 'button') {
             // wx.canvasToTempFilePath({
             //   x: 100,
