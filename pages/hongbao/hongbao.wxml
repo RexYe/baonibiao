@@ -1,4 +1,4 @@
-<view class="receive-container">
+<view class="receive-container" wx:if="{{ !jubao_div_if }}">
   
   <view class="receive-main" style="width:100%;height:{{mainH}}">
 
@@ -65,8 +65,8 @@
 
       </view>
       
-      <view id="rec-ope-jubao">举报</view>
-      <view></view>
+      <view id="rec-ope-jubao" bindtap="_jubao">举报</view>
+      
       
   </view>
 
@@ -114,4 +114,9 @@
     </view>
     
   </view>
+</view>
+
+<view class="jubao-div" style="width:{{windowW}};height:{{windowH}};" wx:if="{{jubao_div_if}}" animation="{{animationData}}">
+      <view wx:for="jubaoList" wx:key="unique" class="jubao-single-div">{{jubaoList[index]}}</view>
+      <image id="cancel-img" src="./resource/cancel.svg" bindtap="_cancelJubao"></image>
 </view>
