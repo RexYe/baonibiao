@@ -1,4 +1,6 @@
 import {getWindowH,_base64ToArrayBuffer} from '../../utils/util'
+import {voiceAnalyser} from './analyse'
+
 var testUserInfo = {
   avatarUrl:'http://lvzu-imgs.oss-cn-hangzhou.aliyuncs.com/%E4%B8%8B%E8%BD%BD.png',
   nickName:'lvzu1111111111111111111111',
@@ -259,7 +261,7 @@ Page({
   goTransmit:function (e) {
     //跳转至转发页面
     wx.navigateTo({
-      url: '../zhifuwancheng/zhifuwancheng'
+      url: `../zhifuwancheng/zhifuwancheng?flag=${this.data.rpdetail.flag}`
     })
   },
 
