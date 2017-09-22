@@ -23,16 +23,8 @@
         <view class="btn">
             <button type="primary" bindtap="zhuanfa_qunliao" open-type="share">转发到群聊</button>
             <button type="default" bindtap="zhuanfa_pengyq">生成朋友圈分享图</button>
-            <view class="shiyishi" bindtap="shiyishi" wx:if="{{isFinished}}"> 返回 </view>
-            <view class="shiyishi" bindtap="shiyishi" wx:if="{{!isFinished}}"> 我也试一试 </view>
+            <view class="shiyishi" bindtap="shiyishi" wx:if="{{flag}}"> 返回 </view>
+            <view class="shiyishi" bindtap="shiyishi" wx:if="{{!flag}}"> 我也试一试 </view>
         </view>
     </view>
-    <canvas
-        disable-scroll="true"
-        catchtouchmove="ccvsMove"
-        bindtouchmove="cvsMove"
-        canvas-id="target"
-        id="target"
-        style='width:640rpx;height:640rpx'>
-    </canvas>
 </view>
