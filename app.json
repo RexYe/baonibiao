@@ -6,7 +6,8 @@
     "pages/myrecord/myrecord",
     "pages/problems/problems",
     "pages/zhifuwancheng/zhifuwancheng",
-    "pages/sharepage/sharepage"
+    "pages/sharepage/sharepage",
+    "pages/moreabouttype/moreabouttype"
   ],
   "window":{
     "backgroundTextStyle":"light",
