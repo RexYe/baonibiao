@@ -165,15 +165,29 @@ Page({
               t.data.type = 'bgy'
               t._jineAvailable(t.data.inputTxt_jine)
               t._renshuAvailable(t.data.inputTxt_renshu)
-              if(t.data.cannotsend_jine==0 && t.data.cannotsend_renshu==0){
-                      t._is_need_wxpay() //判断是否需要微信支付
-                      t.data.wx_request_data={
-                            is_need_wxpay:t.data.is_need_wxpay,
-                            cash:t.data.cash,
-                            type:t.data.type,
-                            inputTxt_renshu:t.data.inputTxt_renshu
-                      },
-                      t._gotoPay()
+              t._is_need_wxpay() //判断是否需要微信支付
+              if(t.data.is_need_wxpay==true){
+                  t._showModal('余额不足，是否充值？')
+                  t.data.wx_request_data={
+                        is_need_wxpay:t.data.is_need_wxpay,
+                        cash:t.data.cash,
+                        type:t.data.type,
+                        _id:app.G.userInfo._id
+                  },
+                  t._gotoPay_wxpay()
+              }
+              if(t.data.is_need_wxpay==false){
+                  if(t.data.cannotsend_jine==0 && t.data.cannotsend_renshu==0){
+                          t.data.wx_request_data={
+                                is_need_wxpay:t.data.is_need_wxpay,
+                                cash:t.data.cash,
+                                type:t.data.type,
+                                inputTxt_renshu:t.data.inputTxt_renshu,
+                                _id:app.G.userInfo._id
+                          }
+                          t._gotoPay()
+                  }
+
               }
         }
         if(t.data.input_div_if == '跟我唱红包'){
@@ -297,40 +311,60 @@ Page({
               t.data.is_need_wxpay = true;
           }
   },
+  //路径1：走内部支付
   _gotoPay: function(){
       const t = this
-      // console.log(1);
-       let type = t.data.type
-       let _redid = '201709220325'
-      wx.navigateTo({
-        //将参数传进去
-        url: '../zhifuwancheng/zhifuwancheng?_redid='+_redid+'&_type='+type
-      })
-      return
       console.log(t.data.wx_request_data);
                 // 将时间戳从number转成string
                 // let timestamp = (Date.parse(new Date())/1000).toString();
                 wx.request({
-                      // url: `${app.G.REQPREFIX}/api/wx/payment`,
+                      url: `${app.G.REQPREFIX}/api/hongbao/fa`,
+                      method: 'POST',
+                      data: t.data.wx_request_data,
+                      header: {
+                          'content-type': 'application/json'
+                      },
+                      success: function(res) {
+                        console.log('请求成功（内部支付）,已经拿到_redid----->',res)
+                              let _redid = res.data
+                              wx.navigateTo({
+                                  //将_redid参数传进去
+                                  url: '../zhifuwancheng/zhifuwancheng?_redid='+_redid
+                              })
+                      },
+                      fail: function(err) {
+                        console.log('请求失败');
+                        wx.showToast({
+                            title: '创建订单失败',
+                            icon: 'loading',
+                            duration: 2000
+                        })
+                          console.log(err)
+                      }
+                })
+  },
+  //路径2：走微信支付
+  _gotoPay_wxpay: function(){
+      const t = this
+      console.log(t.data.wx_request_data);
+                wx.request({
+                      url: `${app.G.REQPREFIX}/api/wx/payment`,
                       method: 'GET',
                       data: t.data.wx_request_data,
                       header: {
                           'content-type': 'application/json'
                       },
                       success: function(res) {
-                          if(res.data.weizhifu){
-                              t._requestPayment(res)
-                          }
-                          else{
-                              let _redid = res.data._redid
-                              //若已支付，则直接跳转到支付完成页面
-                              wx.navigateTo({
-                                  //将_redid参数传进去
-                                  url: '../zhifuwancheng/zhifuwancheng?_redid='+_redid
-                              })
-                          }
+                        if(res.data.length==0 || res.data=="Internal Server Error"){
+                            console.log('微信支付瘫痪了，请稍后再试');
+                        }
+                        else{
+                            console.log('请求成功（需要微信支付）,----->',res)
+                            t._requestPayment(res)
+                        }
                       },
                       fail: function(err) {
+                        console.log('请求失败(需要微信支付)');
                         wx.showToast({
                             title: '创建订单失败',
                             icon: 'loading',
@@ -383,25 +417,28 @@ Page({
 },
 _requestPayment: function(res1){
       const t = this
-      wx.requestPayment({
-        'timeStamp': res1.data.timestamp,
-        'nonceStr': res1.data.nonceStr,
-        'package': 'prepay_id='+res1.data.prepay_id,
-        'signType': 'MD5',
-        'paySign': res.data._paySignjs,
-        'success':function(res){
-              //充值成功后发送请求返回一个_redid
-              t._return_redid(res1)
-        },
-        'fail':function(res){
-          wx.showToast({
-              title: '支付失败',
-              icon: 'loading',
-              duration: 2000
-          })
-        },
-        'complete':function(res){}
-      })
+      console.log('调起微信支付钱获取的参数------>',res1);
+      // wx.requestPayment({
+      //  timeStamp': '',
+      //  'nonceStr': '',
+      //  'package': '',
+      //  'signType': 'MD5',
+      //  'paySign': '',
+      //   'success':function(res){
+      //         //充值成功后发送请求返回一个_redid
+      //         t._return_redid(res1)
+      //         t._getYuE_request()//支付完成后获取余额
+      //         t.
+      //   },
+      //   'fail':function(res){
+      //     wx.showToast({
+      //         title: '支付失败',
+      //         icon: 'loading',
+      //         duration: 2000
+      //     })
+      //   },
+      //   'complete':function(res){}
+      // })
 },
 //返回服务器_redid请求
 _return_redid: function(){
@@ -433,18 +470,23 @@ _return_redid: function(){
 _getYuE_request: function(){
         const t = this;
         wx.request({
-              // url: `${app.G.REQPREFIX}/api/wx/payment`,
-              method: 'POST',
-              data: '',
+              url: `${app.G.REQPREFIX}/api/user/hongbao`,
+              method: 'GET',
+              data: {
+                _id:app.G.userInfo._id
+              },
               header: {
                   'content-type': 'application/json'
               },
               success: function(res) {
+                console.log('获取余额成功');
+                console.log(res);
                     t.setData({
-                        available_balance:res.data.yue
+                        available_balance:res.data.yue/100
                     })
               },
               fail: function(err) {
+                console.log('获取余额失败');
                   console.log(err)
               }
         })
