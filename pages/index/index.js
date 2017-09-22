@@ -262,9 +262,11 @@ Page({
   _gotoPay: function(){
       const t = this
       // console.log(1);
+       let type = t.data.type
+       let _redid = '201709220325'
       wx.navigateTo({
-        //将_redid参数传进去
-        url: '../zhifuwancheng/zhifuwancheng?_redid=111'
+        //将参数传进去
+        url: '../zhifuwancheng/zhifuwancheng?_redid='+_redid+'&_type='+type
       })
       return
       console.log(t.data.wx_request_data);
