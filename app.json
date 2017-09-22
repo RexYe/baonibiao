@@ -17,25 +17,25 @@
   },
   "tabBar":{
     "borderStyle":"white",
-    "selectedColor":"#294057",
+    "selectedColor":"#e25d55",
     "list":[
       {
         "pagePath": "pages/index/index",
         "text": "首页",
-        "iconPath":"./tabBar_img/index.png",
-        "selectedIconPath":"./tabBar_img/index_on.png"
+        "iconPath":"./tabBar_img/homepage.png",
+        "selectedIconPath":"./tabBar_img/homepage_fill.png"
       },
       {
         "pagePath": "pages/tixian/tixian",
         "text": "提现",
-        "iconPath":"./tabBar_img/publish.png",
-        "selectedIconPath":"./tabBar_img/publish_on.png"
+        "iconPath":"./tabBar_img/integral.png",
+        "selectedIconPath":"./tabBar_img/integral_fill.png"
       },
       {
         "pagePath": "pages/hongbao/hongbao",
         "text": "红包",
-        "iconPath":"./tabBar_img/me.png",
-        "selectedIconPath":"./tabBar_img/me_on.png"
+        "iconPath":"./tabBar_img/people.png",
+        "selectedIconPath":"./tabBar_img/people_fill.png"
       }
     ]
   }
