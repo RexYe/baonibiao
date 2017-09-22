@@ -81,6 +81,12 @@
   align-items: center;
 }
 
+#rec-ope-jubao{
+  font-size: 26rpx;
+  margin-top: 35rpx;
+  color:#fff;
+}
+
 .ope-single{
   padding: 0 20rpx;
   display: flex;

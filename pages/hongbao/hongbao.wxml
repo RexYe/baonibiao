@@ -38,20 +38,21 @@
       >赏金都被领完了</button>
 
       <view class="rev-operation">
-        <view class="ope-single" bindtap="getMoney">
-          <image class="ope-img"
-          src="./resource/money.svg"
-          mode='scaleToFill'
-          ></image>
-          <view class="ope-str">去提现</view>
-        </view>
-
+        
         <view class="ope-single" bindtap="giveRedPorcket">
           <image class="ope-img"
           src="./resource/voice.svg"
           mode='scaleToFill'
           ></image>
           <view class="ope-str">发红包</view>
+        </view>
+
+        <view class="ope-single" bindtap="getMoney">
+          <image class="ope-img"
+          src="./resource/money.svg"
+          mode='scaleToFill'
+          ></image>
+          <view class="ope-str">去提现</view>
         </view>
 
         <view class="ope-single" bindtap="goTransmit">
@@ -63,6 +64,10 @@
         </view>
 
       </view>
+      
+      <view id="rec-ope-jubao">举报</view>
+      <view></view>
+      
   </view>
 
   <view class="receiveInfo">
