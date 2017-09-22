@@ -1,6 +1,4 @@
-//index.js
 //获取应用实例
-var util=require('../../utils/util.js')
 var app = getApp()
 Page({
     data: {
@@ -11,20 +9,19 @@ Page({
         warning:''
     },
     onLoad: function () {
-      var that = this
-      //获取全局变量==>余额
-      that.setData({
-        available_balance:app.globalData.balance
-      })
-        // console.log('onLoad')
-        // var that = this
-        // //调用应用实例的方法获取全局数据
-        // app.getUserInfo(function(userInfo){
-        //   //更新数据
-        //   that.setData({
-        //     userInfo:userInfo
-        //   })
-        // })
+        //请求余额
+        const t = this;
+        wx.request({
+            url: `${app.G.REQPREFIX}/api/user/hongbao`,
+            data:app.GetReqParam(),
+            method:'GET',
+            success:function(res) {
+                const dt = res.data;
+                t.setData({
+                    available_balance:(dt.yue/100).toFixed(2)
+                })
+            }
+        })
     },
     //举报
     jubao:function() {
@@ -44,9 +41,28 @@ Page({
                 warningShow:!this.data.warningShow,
                 warning:'提取的金额不能大于余额!'
             })
-            // return;
+            return;
+        } else {
+            const t = this;
+            // 发起一个提现金额的请求
+            // 请求参数为余额
+            let reqParam = {
+                cash: parseInt(t.data.ti_xian_jin_e*100)
+            }
+            wx.request({
+                url: `${app.G.REQPREFIX}/api/user/tixian`,
+                data:app.GetReqParam(reqParam),
+                method:'POST',
+                //当成功提现后弹出模态框
+                success:function(res) {
+                    console.log(res);
+                    wx.showModal({
+                        title: '提示',
+                        content: '提现成功,预计1-5个工作日内到账',
+                    })
+                }
+            })
         }
-        console.log(this.data.ti_xian_jin_e);
     },
     //得到你所要提现的金额
     getValue:function(e) {
