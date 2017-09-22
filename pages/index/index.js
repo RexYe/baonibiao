@@ -4,12 +4,14 @@ var app = getApp()
 
 Page({
   data: {
-    input_div_if:'飙红包',//初始的红包类型
+    input_div_if:'飙高音红包',//初始的红包类型
     inputTxt_jine:'',
     inputTxt_renshu:'',
     inputTxt_shuliang:'',
     inputTxt_wenti:'',
     inputTxt_xswenti:'',
+    inputTxt_sqzjweizhi:'',//手气最佳位置
+    inputTxt_kouling:'',//口令
     cannotsend_jine:1,//判断金额是否符合发送红包要求
     cannotsend_renshu:1,//判断人数是否符合发送红包要求
     cannotsend_shuliang:1,//判断红包数量是否符合发送红包要求
@@ -21,18 +23,18 @@ Page({
     available_balance:2.00,
     //付款总金额,单位为分
     cash:0,
-    choose_type_img:'./img/飙红包.png',
-    choose_type_text:'飙红包',
+    choose_type_img:'./img/飙高音红包.png',
+    choose_type_text:'飙高音红包',
     choose_type_div_if:false,
     red_packet_input_type:'0',
     hongbao_type:[
       {
-        type:'飙红包',
-        imgsrc:'./img/飙红包.png'
+        type:'飙高音红包',
+        imgsrc:'./img/飙高音红包.png'
       },
       {
-        type:'唱红包',
-        imgsrc:'./img/唱红包.png'
+        type:'跟我唱红包',
+        imgsrc:'./img/跟我唱红包.png'
       },
       {
         type:'提问红包',
@@ -41,6 +43,22 @@ Page({
       {
         type:'悬赏红包',
         imgsrc:'./img/悬赏红包.png'
+      },
+      {
+        type:'幸运红包',
+        imgsrc:'./img/幸运红包.png'
+      },
+      {
+        type:'尖叫红包',
+        imgsrc:'./img/尖叫红包.png'
+      },
+      {
+        type:'口令红包',
+        imgsrc:'./img/口令红包.png'
+      },
+      {
+        type:'绕口令红包',
+        imgsrc:'./img/绕口令红包.png'
       }
     ],
     wx_request_data:{},
@@ -102,7 +120,7 @@ Page({
             choose_type_div_if:false
         })
     },300)
-    t.data.choose_type_text={'0':'飙红包','1':'唱红包','2':'提问红包','3':'悬赏红包'}[e.currentTarget.dataset.id] || '飙红包';
+    t.data.choose_type_text={'0':'飙高音红包','1':'跟我唱红包','2':'提问红包','3':'悬赏红包','4':'幸运红包','5':'尖叫红包','6':'口令红包','7':'绕口令红包'}[e.currentTarget.dataset.id] || '飙高音红包';
     let imgsrc_text = t.data.choose_type_text
     let imgsrc = './img/'+imgsrc_text+'.png'
     t.setData({
@@ -123,7 +141,7 @@ Page({
   build_red_packet: function() {
         const t = this;
         //先判断红包类型，根据红包类型判断是否符合条件
-        if(t.data.input_div_if == '飙红包'){
+        if(t.data.input_div_if == '飙高音红包'){
               t.data.type = 'bgy'
               t._jineAvailable(t.data.inputTxt_jine)
               t._renshuAvailable(t.data.inputTxt_renshu)
@@ -138,7 +156,7 @@ Page({
                       t._gotoPay()
               }
         }
-        if(t.data.input_div_if == '唱红包'){
+        if(t.data.input_div_if == '跟我唱红包'){
               t.data.type = 'chb'
               t._jineAvailable(t.data.inputTxt_jine)
               t._shuliangAvailable(t.data.inputTxt_shuliang)
@@ -304,44 +322,44 @@ Page({
   },
   //input监听函数
   bindKeyInput: function(e) {
-    const t = this
-    //红包金额
-    if(e.target.id === 'jine'){
-            t.data.inputTxt_jine = Number(e.detail.value)
-            //传服务器的cash为红包金额，不包括服务费，单位为分
-            t.data.cash = Number(e.detail.value)*100
-            //服务费为6%，保留两位小数
-            let _charge_money;
-            let _charge_money_toFixed = (Number(e.detail.value)*0.06).toFixed(2)
-            let _charge_money_noFixed = Number(e.detail.value)*0.06
-            //不足1分按1分算
-            if(_charge_money_noFixed>_charge_money_toFixed){
-                  _charge_money = Number(_charge_money_toFixed)+0.01
-            }
-            else{
-                _charge_money = _charge_money_toFixed;
-            }
-            t.data.all_money = Number(_charge_money)+Number(e.detail.value)
-            t.setData({
-                    charge_money:_charge_money
-            })
-    }
-    //人数
-    if(e.target.id === 'renshu') {
-            t.data.inputTxt_renshu = Number(e.detail.value)
-    }
-    //红包数量
-    if(e.target.id === 'shuliang') {
-            t.data.inputTxt_shuliang = Number(e.detail.value)
-    }
-    //填写问题
-    if(e.target.id === 'tianxiewenti'){
-            t.data.inputTxt_wenti = e.detail.value
-    }
-    //悬赏问题
-    if(e.target.id === 'xswenti'){
-            t.data.inputTxt_xswenti = e.detail.value
-    }
+      const t = this
+      //红包金额
+      if(e.target.id === 'jine'){
+              t.data.inputTxt_jine = Number(e.detail.value)
+              //传服务器的cash为红包金额，不包括服务费，单位为分
+              t.data.cash = Number(e.detail.value)*100
+              //服务费为6%，保留两位小数
+              let _charge_money;
+              let _charge_money_toFixed = (Number(e.detail.value)*0.06).toFixed(2)
+              let _charge_money_noFixed = Number(e.detail.value)*0.06
+              //不足1分按1分算
+              if(_charge_money_noFixed>_charge_money_toFixed){
+                    _charge_money = Number(_charge_money_toFixed)+0.01;
+              }
+              else{
+                  _charge_money = _charge_money_toFixed;
+              }
+              t.data.all_money = Number(_charge_money)+Number(e.detail.value)
+              t.setData({
+                      charge_money:_charge_money
+              })
+      }
+      //人数
+      if(e.target.id === 'renshu') {
+              t.data.inputTxt_renshu = Number(e.detail.value)
+      }
+      //红包数量
+      if(e.target.id === 'shuliang') {
+              t.data.inputTxt_shuliang = Number(e.detail.value)
+      }
+      //填写问题
+      if(e.target.id === 'tianxiewenti'){
+              t.data.inputTxt_wenti = e.detail.value
+      }
+      //悬赏问题
+      if(e.target.id === 'xswenti'){
+              t.data.inputTxt_xswenti = e.detail.value
+      }
 },
 _requestPayment: function(res1){
       const t = this

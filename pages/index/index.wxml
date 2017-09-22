@@ -10,29 +10,30 @@
       <text>{{choose_type_text}}</text>
       <text id="choose_type_text">点击选择红包类型</text>
     </view>
-    <view class="input-div" wx:if="{{input_div_if == '飙红包'}}">
+    <view class="input-div" wx:if="{{input_div_if == '飙高音红包'}}">
       <view class="section">
         <text class="title">金额（元）</text>
         <input placeholder-style="color:#bbbbbb" id="jine" placeholder="填写金额" type="digit" confirm-type="next" bindinput="bindKeyInput" maxlength="4" value="{{inputTxt_jine}}"/>
       </view>
       <view class="section">
-        <text class="title">人数</text>
+        <text class="title">参与人数</text>
         <input placeholder-style="color:#bbbbbb" id="renshu" placeholder="填写人数" type="number" confirm-type="next" bindinput="bindKeyInput" maxlength="2" value="{{inputTxt_renshu}}"/>
       </view>
       <text class="tips">需支付¥{{charge_money}}服务费，优先使用余额¥{{available_balance}}</text>
       <button type="warn" size="default" bindtap="build_red_packet">生成红包</button>
     </view>
-    <view class="input-div" wx:if="{{input_div_if == '唱红包'}}">
-      <view class="section">
-        <text class="title">选择歌词</text>
-      </view>
+    <view class="input-div" wx:if="{{input_div_if == '跟我唱红包'}}">
       <view class="section">
         <text class="title">金额（元）</text>
         <input placeholder-style="color:#bbbbbb" id="jine" placeholder="填写金额" type="digit" confirm-type="next" bindinput="bindKeyInput" maxlength="4" value="{{inputTxt_jine}}"/>
       </view>
       <view class="section">
-        <text class="title">数量</text>
+        <text class="title">红包个数</text>
         <input placeholder-style="color:#bbbbbb" id="shuliang" placeholder="填写数量" type="number" confirm-type="next" bindinput="bindKeyInput" maxlength="2" value="{{inputTxt_shuliang}}"/>
+      </view>
+      <view class="section">
+        <text class="title">唱一句</text>
+        <image class="gwc-img"src="./img/voice.png"></image>
       </view>
       <text class="tips">需支付¥{{charge_money}}服务费，优先使用余额¥{{available_balance}}</text>
       <button type="warn" size="default" bindtap="build_red_packet">生成红包</button>
@@ -69,9 +70,72 @@
       <text class="tips">需支付¥{{charge_money}}服务费，优先使用余额¥{{available_balance}}</text>
       <button type="warn" size="default" bindtap="build_red_packet">生成红包</button>
     </view>
+    <view class="input-div" wx:if="{{input_div_if == '幸运红包'}}">
+      <view class="section">
+        <text class="title">金额（元）</text>
+        <input placeholder-style="color:#bbbbbb" id="jine" placeholder="填写金额" type="digit" confirm-type="next" bindinput="bindKeyInput" maxlength="4" value="{{inputTxt_jine}}"/>
+      </view>
+      <view class="section">
+        <text class="title">参与人数</text>
+        <input placeholder-style="color:#bbbbbb" id="renshu" placeholder="填写参与人数" type="number" confirm-type="next" bindinput="bindKeyInput" maxlength="2" value="{{inputTxt_renshu}}"/>
+      </view>
+      <view class="section">
+        <text class="title">手气最佳位置</text>
+        <input placeholder-style="color:#bbbbbb" id="xswenti" placeholder="填写手气最佳位置" type="number" confirm-type="next" bindinput="bindKeyInput" maxlength="2" value="{{inputTxt_sqzjweizhi}}"/>
+      </view>
+      <text class="tips">需支付¥{{charge_money}}服务费，优先使用余额¥{{available_balance}}</text>
+      <button type="warn" size="default" bindtap="build_red_packet">生成红包</button>
+    </view>
+    <view class="input-div" wx:if="{{input_div_if == '尖叫红包'}}">
+      <view class="section">
+        <text class="title">金额（元）</text>
+        <input placeholder-style="color:#bbbbbb" id="jine" placeholder="填写金额" type="digit" confirm-type="next" bindinput="bindKeyInput" maxlength="4" value="{{inputTxt_jine}}"/>
+      </view>
+      <view class="section">
+        <text class="title">参与人数</text>
+        <input placeholder-style="color:#bbbbbb" id="renshu" placeholder="填写参与人数" type="number" confirm-type="next" bindinput="bindKeyInput" maxlength="2" value="{{inputTxt_renshu}}"/>
+      </view>
+      <text class="tips">需支付¥{{charge_money}}服务费，优先使用余额¥{{available_balance}}</text>
+      <button type="warn" size="default" bindtap="build_red_packet">生成红包</button>
+    </view>
+    <view class="input-div" wx:if="{{input_div_if == '口令红包'}}">
+      <view class="section">
+        <text class="title">金额（元）</text>
+        <input placeholder-style="color:#bbbbbb" id="jine" placeholder="填写金额" type="digit" confirm-type="next" bindinput="bindKeyInput" maxlength="4" value="{{inputTxt_jine}}"/>
+      </view>
+      <view class="section">
+        <text class="title">红包个数</text>
+        <input placeholder-style="color:#bbbbbb" id="shuliang" placeholder="填写数量" type="number" confirm-type="next" bindinput="bindKeyInput" maxlength="2" value="{{inputTxt_shuliang}}"/>
+      </view>
+      <view class="section">
+        <text class="title">填写口令</text>
+        <input placeholder-style="color:#bbbbbb" id="kouling" placeholder="填写口令" type="text" confirm-type="next" bindinput="bindKeyInput" maxlength="14" value="{{inputTxt_kouling}}"/>
+      </view>
+      <text class="tips">需支付¥{{charge_money}}服务费，优先使用余额¥{{available_balance}}</text>
+      <button type="warn" size="default" bindtap="build_red_packet">生成红包</button>
+    </view>
+    <view class="input-div" wx:if="{{input_div_if == '绕口令红包'}}">
+      <view class="section">
+        <text class="title">金额（元）</text>
+        <input placeholder-style="color:#bbbbbb" id="jine" placeholder="填写金额" type="digit" confirm-type="next" bindinput="bindKeyInput" maxlength="4" value="{{inputTxt_jine}}"/>
+      </view>
+      <view class="section">
+        <text class="title">数量</text>
+        <input placeholder-style="color:#bbbbbb" id="shuliang" placeholder="填写数量" type="number" confirm-type="next" bindinput="bindKeyInput" maxlength="2" value="{{inputTxt_renshu}}"/>
+      </view>
+      <view class="section" id="choose_rkl">
+        <text class="title">选择绕口令</text>
+        <image class="rkl-img"src="./img/下拉.png"></image>
+      </view>
+      <text class="tips">需支付¥{{charge_money}}服务费，优先使用余额¥{{available_balance}}</text>
+      <button type="warn" size="default" bindtap="build_red_packet">生成红包</button>
+    </view>
   </view>
     <view class="choose_type_div" wx:if="{{choose_type_div_if}}" animation="{{animationData}}">
       <view class="choose_type_cancel">
+        <view class="cancel_img_div">
+          <image src="./img/取消.png" bindtap="cancel_choose_type"></image>
+        </view>
         <text>点击选择红包类型</text>
       </view>
       <view class="hongbao_type" wx:for="{{hongbao_type}}" wx:key="unique">
@@ -80,9 +144,6 @@
           <text>{{item.type}}</text>
           <button type="primary" size="mini" catchtap="to_know_more">了解详情</button>
         </view>
-      </view>
-      <view class="cancel_img_div">
-        <image src="./img/取消.png" bindtap="cancel_choose_type"></image>
       </view>
     </view>
 </view>
