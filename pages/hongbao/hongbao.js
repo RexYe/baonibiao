@@ -186,18 +186,6 @@ Page({
       animationData:animation.export()
     })}, 400)
   },
-  choose_type_done: function(e){
-    const t = this;
-    t._close_animation()
-    //0.3秒后隐藏选择菜单
-    setTimeout(()=>{
-      t.setData({
-          jubao_div_if:false
-      })
-    },300)
-  },
-
-
 
   startRec:function () {
     var _this = this
