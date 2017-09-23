@@ -2,11 +2,11 @@
 var app = getApp()
 Page({
     data: {
-        available_balance:0.00,
-        ti_xian_jin_e:'',
-        input_type:'digit',
-        warningShow:false,
-        warning:''
+        available_balance:0.00,//余额
+        ti_xian_jin_e:'',//提现金额
+        input_type:'digit',//数字键盘
+        warningShow:false,//警告文案是否显示
+        warning:''//警告文案
     },
     onLoad: function () {
         //请求余额
@@ -30,12 +30,13 @@ Page({
     //全部提现
     qubutixian:function() {
         this.setData({
+            //提现金额设置成余额
             ti_xian_jin_e:this.data.available_balance
         })
     },
     //点击提现按钮时的操作
     tixian:function() {
-        //将提现金额发给后台
+        //如果提现金额大于余额的话,警告文案出现,并且return
         if(this.data.ti_xian_jin_e > this.data.available_balance) {
             this.setData({
                 warningShow:!this.data.warningShow,
@@ -45,7 +46,7 @@ Page({
         } else {
             const t = this;
             // 发起一个提现金额的请求
-            // 请求参数为余额
+            // 请求参数为提现金额
             let reqParam = {
                 cash: parseInt(t.data.ti_xian_jin_e*100)
             }
@@ -70,7 +71,7 @@ Page({
             ti_xian_jin_e:e.detail.value
         })
     },
-    //常见问题
+    //常见问题,点击常见问题跳转到常见问题页面
     changjianwenti:function() {
       wx.navigateTo({
         url: '../problems/problems'

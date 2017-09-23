@@ -27,18 +27,6 @@
   font-size:36rpx;
   position:relative;
 }
-.img{
-    width:40rpx;
-    height:40rpx;
-    position:absolute;
-    top:6rpx;
-    left:368rpx;
-}
-.kouling{
-    color:#f5b774;
-    font-size:44rpx;
-    font-weight:bold;
-}
 .code{
     width:100%;
     height:200rpx;
@@ -55,7 +43,7 @@
     margin-left:-100rpx;
 }
 .zhuanfa{
-    margin-top:40rpx;
+    margin-top:80rpx;
     width:100%;
     background-color:#fff;
     border-radius:8rpx;
