@@ -73,14 +73,15 @@ voiceAnalyser.prototype = {
             var array = new Uint8Array(analyser.frequencyBinCount);
             analyser.getByteFrequencyData(array);
             
-            var load = _this._getLoad(array)
-            var height = _this._getHeight(array)
-            if(load){
-              (_this.loadest<load) && (_this.loadest=load)
-            }
-            if(height){
-              (_this.heightest<height) && (_this.heightest=height)
-            }
+            // var load = _this._getLoad(array)
+            // var height = _this._getHeight(array)
+            // if(load){
+            //   (_this.loadest<load) && (_this.loadest=load)
+            // }
+            // if(height){
+            //   (_this.heightest<height) && (_this.heightest=height)
+            // }
+            _this._anaVoice(array)
             
             voiceDataArr.push(array)
             _this.animationId = requestAnimationFrame(loopData);
@@ -88,19 +89,25 @@ voiceAnalyser.prototype = {
         this.animationId = requestAnimationFrame(loopData);
     },
     
-    _getLoad:function (u8a) {
-      var load = 0
+    // _getLoad:function (u8a) {
+    //   var load = 0
+    //   for(let i=0;i<u8a.length;i++){
+    //     (u8a[i]>load) && (load=u8a[i])
+    //   }
+    //   return load
+    // },
+    // _getHeight:function (u8a) {
+    //   var height = 0
+    //   for(let i=0;i<u8a.length;i++){
+    //     u8a[i] && (height=i)
+    //   }
+    //   return height
+    // },
+    _anaVoice:function (u8a) {
       for(let i=0;i<u8a.length;i++){
-        (u8a[i]>load) && (load=u8a[i])
+        (u8a[i]>this.loadest) && (this.loadest=u8a[i]);
+        u8a[i] && (this.heightest<i) &&(this.heightest=i)
       }
-      return load
-    },
-    _getHeight:function (u8a) {
-      var height = 0
-      for(let i=0;i<u8a.length;i++){
-        u8a[i] && (height=i)
-      }
-      return height
     },
     
     _audioEnd: function(instance) {
@@ -121,6 +128,9 @@ voiceAnalyser.prototype = {
           this.status = 1;
           return;
       };
+      //音频时长
+      console.log(this.source.buffer.duration);
+      //音频响度以及音调高度
       console.log(this.loadest-loadStandard,this.heightest-heightStandard);
       [this.loadest,this.heightest,this.status] = [0,0,0]
     },
