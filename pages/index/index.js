@@ -206,6 +206,9 @@ Page({
                   if(t.data.cannotsend_jine==0 && t.data.cannotsend_renshu==0){
                         t.data.cansendFLAG = true;
                   }
+                  else{
+                        t.data.cansendFLAG = false;
+                  }
           }
           // if(type=='gwc'){
           //         t._shuliangAvailable(t.data.inputTxt_shuliang)
@@ -321,7 +324,8 @@ Page({
                           'content-type': 'application/json'
                       },
                       success: function(res) {
-                        console.log('请求成功（内部支付）,已经拿到_redid----->',res)
+                              console.log('请求成功（内部支付）,已经拿到_redid----->',res)
+                              t._getYuE_request()//内部支付完成后获取余额
                               let _redid = res.data
                               wx.navigateTo({
                                   //将_redid参数传进去
