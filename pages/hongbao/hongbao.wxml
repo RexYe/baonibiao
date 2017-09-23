@@ -1,4 +1,4 @@
-<view class="receive-container">
+<view class="receive-container" wx:if="{{ !jubao_div_if }}">
   
   <view class="receive-main" style="width:100%;height:{{mainH}}">
 
@@ -38,20 +38,21 @@
       >赏金都被领完了</button>
 
       <view class="rev-operation">
-        <view class="ope-single" bindtap="getMoney">
-          <image class="ope-img"
-          src="./resource/money.svg"
-          mode='scaleToFill'
-          ></image>
-          <view class="ope-str">去提现</view>
-        </view>
-
+        
         <view class="ope-single" bindtap="giveRedPorcket">
           <image class="ope-img"
           src="./resource/voice.svg"
           mode='scaleToFill'
           ></image>
           <view class="ope-str">发红包</view>
+        </view>
+
+        <view class="ope-single" bindtap="getMoney">
+          <image class="ope-img"
+          src="./resource/money.svg"
+          mode='scaleToFill'
+          ></image>
+          <view class="ope-str">去提现</view>
         </view>
 
         <view class="ope-single" bindtap="goTransmit">
@@ -63,6 +64,10 @@
         </view>
 
       </view>
+      
+      <view id="rec-ope-jubao" bindtap="_jubao">举报</view>
+      
+      
   </view>
 
   <view class="receiveInfo">
@@ -109,4 +114,9 @@
     </view>
     
   </view>
+</view>
+
+<view class="jubao-div" style="width:{{windowW}};height:{{windowH}};" wx:if="{{jubao_div_if}}" animation="{{animationData}}">
+      <view wx:for="jubaoList" wx:key="unique" class="jubao-single-div">{{jubaoList[index]}}</view>
+      <image id="cancel-img" src="./resource/cancel.svg" bindtap="_cancelJubao"></image>
 </view>

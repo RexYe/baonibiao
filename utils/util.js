@@ -30,19 +30,20 @@ function getWindowH(){
   return windowH
 }
 
-function _base64ToArrayBuffer(base64) {
-    var binary_string =  atob(base64);
-    var len = binary_string.length;
-    var bytes = new Uint8Array( len );
-    for (var i = 0; i < len; i++)        {
-        bytes[i] = binary_string.charCodeAt(i);
+function getWindowW() {
+  var windowW
+  wx.getSystemInfo({
+    success: function(res) {
+      windowW = res.windowWidth
     }
-    return bytes.buffer;
+  })
+  return windowW
 }
+
 
 module.exports = {
   formatTime: formatTime,
   formatMoney:formatMoney,
   getWindowH:getWindowH,
-  _base64ToArrayBuffer:_base64ToArrayBuffer,
+  getWindowW:getWindowW,
 }

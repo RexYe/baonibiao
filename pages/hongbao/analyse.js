@@ -4,35 +4,39 @@
  
  *voice anylyser
  *import {voiceAnalyser} from ''
- *voiceAnalyser._start(ArrayBuffer)
+ *voiceAnalyser._initialize(ArrayBuffer)
  
  */
+
+const loadStandard = 200,
+      heightStandard = 900
 
 var audioContext = new AudioContext(),
 
     voiceDataArr = new Array(),
     
     voiceAnalyser = function() {
-    this.file = null; //the current file
+    this.file = null; //当前音频文件
     this.audioContext = null;
-    this.source = null; //the audio source
+    this.source = null; //audio对象source属性
     this.animationId = null;
-    this.status = 0; //flag for sound is playing 1 or stopped 0
+    this.status = 0; //播放器状态
     this.forceStop = false;
     this.heightest = 0;
     this.loadest = 0;
 };
 
 voiceAnalyser.prototype = {
-    _start: function(arrayBuffer) {
-        audioContext.decodeAudioData(arrayBuffer, function(buffer) {
-            this._visualize(audioContext, buffer);
-        }, function(e) {
-            //提示解码错误
-            console.error(e);
-        });
+    _initialize: function(arrayBuffer) {
+      var _this = this
+      audioContext.decodeAudioData(arrayBuffer, function(buffer) {
+          _this._start(audioContext, buffer);
+      }, function(e) {
+          //提示解码错误
+          console.error(e);
+      });
     },
-    _visualize: function(audioContext, buffer) {
+    _start: function(audioContext, buffer) {
         var audioBufferSouceNode = audioContext.createBufferSource(),
             analyser = audioContext.createAnalyser(),
             that = this;
@@ -104,7 +108,7 @@ voiceAnalyser.prototype = {
           return;
       };
       this.status = 0;
-      console.log(this.loadest,this.heightest);
+      console.log(this.loadest-loadStandard,this.heightest-heightStandard);
     },
     
 }

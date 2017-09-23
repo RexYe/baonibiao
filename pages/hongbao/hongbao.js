@@ -1,4 +1,4 @@
-import {getWindowH,_base64ToArrayBuffer} from '../../utils/util'
+import {getWindowW,getWindowH} from '../../utils/util'
 import {voiceAnalyser} from './analyse'
 
 var testUserInfo = {
@@ -70,7 +70,12 @@ Page({
     buttonStr:'按住说出以上口令领取赏金',
     type:'',
     rpid:'first_test',
-    audioSrc:''
+    audioSrc:'',
+    jubao_div_if:false,
+    windowH:getWindowH()+'px',
+    windowW:getWindowW()+'px',
+    animationData:{},
+    jubaoList:['123','456','789']
   },
   test:function (e) {
     console.log(e);
@@ -130,6 +135,56 @@ Page({
       buttonStr:buttonStr
     })
 
+  },
+
+  _jubao:function () {
+    this._open_animation()
+    this.setData({
+      jubao_div_if:true
+    })
+  },
+  _cancelJubao: function(){
+    const t = this
+    t._close_animation()
+    //0.3秒后隐藏选择菜单
+    setTimeout(()=>{
+      t.setData({
+          jubao_div_if:false
+      })
+    },300)
+  },
+  _open_animation: function(){
+      var animation = wx.createAnimation({
+          duration: 400,
+          timingFunction: 'ease',
+      })
+    this.animation = animation
+    animation.translate(0.1, -900).step()
+    this.setData({
+        animationData:animation.export()
+    })
+    setTimeout(() =>{
+      animation.translate(1).step()
+      this.setData({
+      animationData:animation.export()
+    })}, 10)
+  },
+  _close_animation: function(){
+      const t = this
+      var animation = wx.createAnimation({
+          duration: 500,
+          timingFunction: 'ease',
+      })
+    t.animation = animation
+    animation.translate(0.1,900).step()
+    t.setData({
+        animationData:animation.export()
+    })
+    setTimeout(() =>{
+      animation.translate(1).step()
+      t.setData({
+      animationData:animation.export()
+    })}, 400)
   },
 
   startRec:function () {

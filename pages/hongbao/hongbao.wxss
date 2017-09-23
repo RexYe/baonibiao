@@ -81,11 +81,40 @@
   align-items: center;
 }
 
+#rec-ope-jubao{
+  font-size: 26rpx;
+  margin-top: 35rpx;
+  color:#fff;
+}
+
+.jubao-div{
+  position: absolute;
+  z-index: 9999;
+  background-color: #fff;
+
+  text-align: center; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.jubao-single-div{
+  width: 100%;
+  padding-top: 30rpx;
+}
+
+#cancel-img{
+  width: 100rpx;
+  height: 100rpx;
+}
+
 .ope-single{
   padding: 0 20rpx;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
+  flex-wrap: wrap;
   align-items: center;
   flex-wrap: nowrap;
 }
