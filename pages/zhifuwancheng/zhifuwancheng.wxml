@@ -4,26 +4,21 @@
         <view class="userinfo">
             <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
             <view class="userinfo-nickname">
-                {{userInfo.nickName}}发了一个语音口令
-                <image src="./resources/money.svg"
-                    mode='scaleToFill'
-                    class="img">
-                </image>
+                {{userInfo.nickName}}发了一个{{typeList[type]}}红包
             </view>
-            <view class="kouling">谢谢老板</view>
-
         </view>
         <!--这里放的是二维码-->
         <view class="code">
-            <image src="./resources/code.svg" mode="scaleToFill" class="code-img"></image>
+            <image src="./resources/code.jpg" mode="scaleToFill" class="code-img"></image>
         </view>
 
     </view>
     <view class="zhuanfa">
         <view class="btn">
-            <button type="primary" bindtap="zhuanfa_qunliao" open-type="share">转发到群聊</button>
+            <button type="primary" bindtap="onShareAppMessage" open-type="share">转发到群聊</button>
             <button type="default" bindtap="zhuanfa_pengyq">生成朋友圈分享图</button>
-            <view class="shiyishi" bindtap="shiyishi">我也试一试-></view>
+            <view class="shiyishi" bindtap="shiyishi" wx:if="{{flag}}"> 返回 </view>
+            <view class="shiyishi" bindtap="shiyishi" wx:if="{{!flag}}"> 我也试一试 </view>
         </view>
     </view>
 </view>
