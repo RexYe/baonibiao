@@ -15,12 +15,13 @@ Page({
     cannotsend_jine:1,//判断金额是否符合发送红包要求
     cannotsend_renshu:1,//判断人数是否符合发送红包要求
     cannotsend_shuliang:1,//判断红包数量是否符合发送红包要求
-    type:'',//传给服务器的红包类型
+    cansendFLAG:false,
+    type:'bgy',//传给服务器的红包类型
     is_need_wxpay:'',//是否需要微信支付
     //服务费
     charge_money:'0.00',
     //用户余额
-    available_balance:2.00,
+    available_balance:0.00,
     //付款总金额,单位为分
     cash:0,
     choose_type_img:'./img/飙高音红包.png',
@@ -141,12 +142,14 @@ Page({
         })
     },300)
     t.data.choose_type_text={'0':'飙高音红包','1':'跟我唱红包','2':'提问红包','3':'悬赏红包','4':'幸运红包','5':'尖叫红包','6':'口令红包','7':'绕口令红包'}[e.currentTarget.dataset.id] || '飙高音红包';
+    t.data.type={'0':'bgy','1':'gwc','2':'tw','3':'xs','4':'xy','5':'jj','6':'kl','7':'rkl'}[e.currentTarget.dataset.id] || 'bgy';
     let imgsrc_text = t.data.choose_type_text
     let imgsrc = './img/'+imgsrc_text+'.png'
     t.setData({
       input_div_if:t.data.choose_type_text,
       choose_type_img:imgsrc,//图片路径
       choose_type_text:t.data.choose_type_text,
+      type:t.data.type,
       red_packet_input_type:e.currentTarget.dataset.id,
       //选择红包类型时清空data中的input值
       inputTxt_jine:'',
@@ -157,85 +160,22 @@ Page({
       charge_money:'0.00'
     })
   },
-  //点击生成红包按钮触发
+  //点击生成红包按钮触发函数
   build_red_packet: function() {
         const t = this;
-        //先判断红包类型，根据红包类型判断是否符合条件
-        if(t.data.input_div_if == '飙高音红包'){
-              t.data.type = 'bgy'
-              t._jineAvailable(t.data.inputTxt_jine)
-              t._renshuAvailable(t.data.inputTxt_renshu)
-              t._is_need_wxpay() //判断是否需要微信支付
-              if(t.data.is_need_wxpay==true){
-                  t._showModal('余额不足，是否充值？')
-                  t.data.wx_request_data={
-                        is_need_wxpay:t.data.is_need_wxpay,
-                        cash:t.data.cash,
-                        type:t.data.type,
-                        _id:app.G.userInfo._id
-                  },
-                  t._gotoPay_wxpay()
-              }
-              if(t.data.is_need_wxpay==false){
-                  if(t.data.cannotsend_jine==0 && t.data.cannotsend_renshu==0){
-                          t.data.wx_request_data={
-                                is_need_wxpay:t.data.is_need_wxpay,
-                                cash:t.data.cash,
-                                type:t.data.type,
-                                inputTxt_renshu:t.data.inputTxt_renshu,
-                                _id:app.G.userInfo._id
-                          }
-                          t._gotoPay()
-                  }
-
-              }
+        t._jineAvailable(t.data.inputTxt_jine)//金额已填 1<金额<10
+        t._is_need_wxpay() //判断是否需要微信支付,判断余额够不够
+        if(t.data.is_need_wxpay){
+                //余额不够,先充值
+                t._needWxPay()
         }
-        if(t.data.input_div_if == '跟我唱红包'){
-              t.data.type = 'chb'
-              t._jineAvailable(t.data.inputTxt_jine)
-              t._shuliangAvailable(t.data.inputTxt_shuliang)
-              if(t.data.cannotsend_jine==0 && t.data.cannotsend_shuliang==0){
-                      t._is_need_wxpay()
-                      t.data.wx_request_data={
-                            is_need_wxpay:t.data.is_need_wxpay,
-                            cash:t.data.cash,
-                            type:t.data.type,
-                            inputTxt_shuliang:t.data.inputTxt_shuliang
-                      }
-                      t._gotoPay()
-              }
-        }
-        if(t.data.input_div_if == '提问红包'){
-              t.data.type = 'twhb'
-              t._jineAvailable(t.data.inputTxt_jine)
-              t._shuliangAvailable(t.data.inputTxt_shuliang)
-              if(t.data.cannotsend_jine==0 && t.data.cannotsend_shuliang==0){
-                      t._is_need_wxpay()
-                      t.data.wx_request_data={
-                            wenti:t.data.inputTxt_wenti,
-                            is_need_wxpay:t.data.is_need_wxpay,
-                            cash:t.data.cash,
-                            type:t.data.type,
-                            inputTxt_shuliang:t.data.inputTxt_shuliang
-                      }
-                      t._gotoPay()
-              }
-        }
-        if(t.data.input_div_if == '悬赏红包'){
-              t.data.type = 'xshb'
-              t._jineAvailable(t.data.inputTxt_jine)
-              t._shuliangAvailable(t.data.inputTxt_shuliang)
-              if(t.data.cannotsend_jine==0 && t.data.cannotsend_shuliang==0){
-                      t._is_need_wxpay()
-                      t.data.wx_request_data={
-                            xswenti:t.data.inputTxt_xswenti,
-                            is_need_wxpay:t.data.is_need_wxpay,
-                            cash:t.data.cash,
-                            type:t.data.type,
-                            inputTxt_shuliang:t.data.inputTxt_shuliang
-                      }
-                      t._gotoPay()
-              }
+        else{
+                //余额够，先判断输入是否符合规则，再走内部支付
+                t._judgeInputByType()//第一步，根据类型判断输入
+                //第二步，综合判断符合发送规则后，进入内部支付流程
+                if(t.data.cansendFLAG===true){
+                      t._noneedWxPay()
+                }
         }
   },
   //点击取消选择红包类型的X
@@ -256,6 +196,62 @@ Page({
           content: content,
           showCancel: false,
       })
+  },
+  //根据红包类型判断输入是否符合规则
+  _judgeInputByType: function(type){
+          const t = this
+          if(type=='bgy'){
+                  t._jineAvailable(t.data.inputTxt_jine)
+                  t._renshuAvailable(t.data.inputTxt_renshu)
+                  if(t.data.cannotsend_jine==0 && t.data.cannotsend_renshu==0){
+                        t.data.cansendFLAG = true;
+                  }
+          }
+          // if(type=='gwc'){
+          //         t._shuliangAvailable(t.data.inputTxt_shuliang)
+          // }
+          // if(type=='tw'){
+          //
+          // }
+          // if(type=='xs'){
+          //
+          // }
+  },
+  //需要微信支付
+  _needWxPay: function(){
+        const t = this
+            wx.showModal({
+                  title: '提示',
+                  content: '余额不足，是否充值？',
+                  success: function(res) {
+                      if (res.confirm) {
+                          console.log('确定充值')
+                          t.data.wx_request_data={
+                                is_need_wxpay:t.data.is_need_wxpay,
+                                cash:t.data.cash,
+                                // _id:app.G.userInfo._id
+                          },
+                          t._gotoPay_wxpay()
+                      }
+                      else if (res.cancel) {
+                          console.log('取消充值')
+                      }
+                  }
+            })
+  },
+  //不需要微信支付
+  _noneedWxPay: function(){
+          const t = this
+                if(t.data.cannotsend_jine==0 && t.data.cannotsend_renshu==0){
+                        t.data.wx_request_data={
+                                is_need_wxpay:t.data.is_need_wxpay,
+                                cash:t.data.cash,
+                                type:t.data.type,
+                                inputTxt_renshu:t.data.inputTxt_renshu,
+                                // _id:app.G.userInfo._id
+                        }
+                        t._gotoPay()
+                }
   },
   //判断金额是否符合规则
   _jineAvailable: function(jine){
@@ -473,7 +469,7 @@ _getYuE_request: function(){
               url: `${app.G.REQPREFIX}/api/user/hongbao`,
               method: 'GET',
               data: {
-                _id:app.G.userInfo._id
+                // _id:app.G.userInfo._id
               },
               header: {
                   'content-type': 'application/json'
