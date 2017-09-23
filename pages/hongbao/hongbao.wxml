@@ -4,37 +4,37 @@
 
       <image id="headpic-img"
         src="{{userInfo.avatarUrl}}"
-        mode='scaleToFill'
         lazy-load=true
+        mode='scaleToFill'
       ></image>
       
       <view id="username">{{userInfo.nickName}}</view>
 
       <view class="rp-content">
         <image id="sing-img"
-        src="./resource/sing.svg"
-        mode='scaleToFill'
-        lazy-load=true
+         src="./resource/sing.svg"
+         lazy-load=true
+         mode='scaleToFill'
         ></image>
         <view id="sing-str">{{content}}</view>
       </view>
 
       <button id="rec-button"
-      wx:if="{{rpdetail.flag}}"
-      type="primary"
-      size="default"
-      disabled="false"
-      bindtouchstart="startRec"
-      bindtouchmove="stopRec"
-      bindtouchend="stopRec"
+        wx:if="{{rpdetail.flag}}"
+        type="primary"
+        size="default"
+        disabled="false"
+        bindtouchstart="startRec"
+        bindtouchmove="stopRec"
+        bindtouchend="stopRec"
       >{{buttonStr}}</button>
       <!-- bindtap="hint" -->
 
       <button id="rec-button-over"
-      wx:if="{{ !rpdetail.flag }}"
-      type="primary"
-      size="default"
-      disabled="true"
+        wx:if="{{ !rpdetail.flag }}"
+        type="primary"
+        size="default"
+        disabled="true"
       >赏金都被领完了</button>
 
       <view class="rev-operation">
@@ -57,8 +57,8 @@
 
         <view class="ope-single" bindtap="goTransmit">
           <image class="ope-img"
-          src="./resource/transmit.svg"
-          mode='scaleToFill'
+            src="./resource/transmit.svg"
+            mode='scaleToFill'
           ></image>
           <view class="ope-str">去转发</view>
         </view>
