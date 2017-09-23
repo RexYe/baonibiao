@@ -1,10 +1,74 @@
 //index.js
 //发送红包页面
 var app = getApp()
-
+const HONGBAO_TYPE=[
+  {
+    bgy:{
+      type:'飙高音红包',
+      imgsrc:'./img/飙高音红包.png',
+      dom:{
+        renshu:true
+      }
+    },
+    gwc:{
+      type:'跟我唱红包',
+      imgsrc:'./img/跟我唱红包.png',
+      dom:{
+        shuliang:true,
+        changyiju:true
+      }
+    },
+    tw:{
+        type:'提问红包',
+        imgsrc:'./img/提问红包.png',
+        dom:{
+          shuliang:true,
+          tianxiewenti:true
+        }
+      },
+    xs:{
+        type:'悬赏红包',
+        imgsrc:'./img/悬赏红包.png',
+        dom:{
+          shuliang:true,
+          xswenti:true
+        }
+      },
+    xy:{
+        type:'幸运红包',
+        imgsrc:'./img/幸运红包.png',
+        dom:{
+          renshu:true,
+          shouqizuijia:true
+        }
+      },
+    jj:{
+        type:'尖叫红包',
+        imgsrc:'./img/尖叫红包.png',
+        dom:{
+          renshu:true,
+        }
+      },
+    kl:{
+        type:'口令红包',
+        imgsrc:'./img/口令红包.png',
+        dom:{
+          shuliang:true,
+          tianxiekouling:true
+        }
+      },
+    rkl:{
+        type:'绕口令红包',
+        imgsrc:'./img/绕口令红包.png',
+        dom:{
+          shuliang:true,
+          rkl:true
+        }
+      }
+  }
+]
 Page({
   data: {
-    input_div_if:'飙高音红包',//初始的红包类型
     inputTxt_jine:'',
     inputTxt_renshu:'',
     inputTxt_shuliang:'',
@@ -16,7 +80,7 @@ Page({
     cannotsend_renshu:1,//判断人数是否符合发送红包要求
     cannotsend_shuliang:1,//判断红包数量是否符合发送红包要求
     cansendFLAG:false,
-    type:'bgy',//传给服务器的红包类型
+    type:'bgy',//传给服务器的红包类型,初始的红包类型为飙高音
     is_need_wxpay:'',//是否需要微信支付
     //服务费
     charge_money:'0.00',
@@ -29,42 +93,8 @@ Page({
     choose_rkl_type_text:'',//发红包页显示的绕口令选项
     choose_type_div_if:false,//选择红包类型弹窗
     choose_rkl_div_if:false,//选择绕口令弹窗
-    red_packet_input_type:'0',
     rkl_input_type:'0',
-    hongbao_type:[
-      {
-        type:'飙高音红包',
-        imgsrc:'./img/飙高音红包.png'
-      },
-      {
-        type:'跟我唱红包',
-        imgsrc:'./img/跟我唱红包.png'
-      },
-      {
-        type:'提问红包',
-        imgsrc:'./img/提问红包.png'
-      },
-      {
-        type:'悬赏红包',
-        imgsrc:'./img/悬赏红包.png'
-      },
-      {
-        type:'幸运红包',
-        imgsrc:'./img/幸运红包.png'
-      },
-      {
-        type:'尖叫红包',
-        imgsrc:'./img/尖叫红包.png'
-      },
-      {
-        type:'口令红包',
-        imgsrc:'./img/口令红包.png'
-      },
-      {
-        type:'绕口令红包',
-        imgsrc:'./img/绕口令红包.png'
-      }
-    ],
+    hongbao_type:HONGBAO_TYPE[0],
     rkl_type:[
       {
         type:'1.粉红墙上画凤凰，红凤凰，粉凤凰，粉红凤凰。',
@@ -84,11 +114,24 @@ Page({
     ],
     wx_request_data:{},
     animationData:{},//动画数据
+    isShow:{
+      renshu: true,
+      shuliang: true
+    },
     userInfo: {}
+  },
+  //判断当前红包是否有以下这些dom节点
+  _isShow: function(){
+        const t = this
+        let isShow=HONGBAO_TYPE[0][t.data.type].dom
+        t.setData({
+          isShow:isShow
+        })
   },
   //点击选择红包类型触发
   choose_type_div: function(){
       const t = this;
+      t._isShow()
       //播放打开动画
       t._open_animation()
       t.setData({
@@ -132,33 +175,32 @@ Page({
   },
   //点击红包类型，完成选择后触发
   choose_type_done: function(e){
-    const t = this;
-    //播放关闭动画
-    t._close_animation()
-    //0.3秒后隐藏选择菜单
-    setTimeout(()=>{
+        const t = this;
+        t._isShow()
+        //播放关闭动画
+        t._close_animation()
+        //0.3秒后隐藏选择菜单
+        setTimeout(()=>{
+            t.setData({
+                choose_type_div_if:false
+            })
+        },300)
+        t.data.choose_type_text={'bgy':'飙高音红包','gwc':'跟我唱红包','tw':'提问红包','xs':'悬赏红包','xy':'幸运红包','jj':'尖叫红包','kl':'口令红包','rkl':'绕口令红包'}[e.currentTarget.dataset.id] || '飙高音红包';
+        t.data.type=e.currentTarget.dataset.id || 'bgy';
+        let imgsrc_text = t.data.choose_type_text
+        let imgsrc = './img/'+imgsrc_text+'.png'
         t.setData({
-            choose_type_div_if:false
+          choose_type_img:imgsrc,//图片路径
+          choose_type_text:t.data.choose_type_text,
+          type:t.data.type,
+          //选择红包类型时清空data中的input值
+          inputTxt_jine:'',
+          inputTxt_renshu:'',
+          inputTxt_shuliang:'',
+          inputTxt_wenti:'',
+          inputTxt_xswenti:'',
+          charge_money:'0.00'
         })
-    },300)
-    t.data.choose_type_text={'0':'飙高音红包','1':'跟我唱红包','2':'提问红包','3':'悬赏红包','4':'幸运红包','5':'尖叫红包','6':'口令红包','7':'绕口令红包'}[e.currentTarget.dataset.id] || '飙高音红包';
-    t.data.type={'0':'bgy','1':'gwc','2':'tw','3':'xs','4':'xy','5':'jj','6':'kl','7':'rkl'}[e.currentTarget.dataset.id] || 'bgy';
-    let imgsrc_text = t.data.choose_type_text
-    let imgsrc = './img/'+imgsrc_text+'.png'
-    t.setData({
-      input_div_if:t.data.choose_type_text,
-      choose_type_img:imgsrc,//图片路径
-      choose_type_text:t.data.choose_type_text,
-      type:t.data.type,
-      red_packet_input_type:e.currentTarget.dataset.id,
-      //选择红包类型时清空data中的input值
-      inputTxt_jine:'',
-      inputTxt_renshu:'',
-      inputTxt_shuliang:'',
-      inputTxt_wenti:'',
-      inputTxt_xswenti:'',
-      charge_money:'0.00'
-    })
   },
   //点击生成红包按钮触发函数
   build_red_packet: function() {
@@ -245,7 +287,6 @@ Page({
   //不需要微信支付
   _noneedWxPay: function(){
           const t = this
-                if(t.data.cannotsend_jine==0 && t.data.cannotsend_renshu==0){
                         t.data.wx_request_data={
                                 is_need_wxpay:t.data.is_need_wxpay,
                                 cash:t.data.cash,
@@ -254,7 +295,6 @@ Page({
                                 // _id:app.G.userInfo._id
                         }
                         t._gotoPay()
-                }
   },
   //判断金额是否符合规则
   _jineAvailable: function(jine){
@@ -374,46 +414,30 @@ Page({
                       }
                 })
   },
+  //金额输入监听函数
+  jineInput: function(e){
+        const t = this
+        let jine = +e.detail.value
+        //传服务器的cash为红包金额，不包括服务费，单位为分
+        let cash = jine*100
+        //服务费为6%，保留两位小数,不足1分按1分算
+        let fee = ((Math.floor(cash*0.06)+1).toFixed(2))/100
+        t.setData({
+                charge_money:fee,
+                cash:cash
+        })
+  },
+  //人数输入监听函数
+  renshuInput: function(e){
+        t.data.inputTxt_renshu = +e.detail.value
+  },
+  //红包数量监听函数
+  shuliangInput: function(e){
+        t.data.inputTxt_shuliang = +e.detail.value
+  },
   //input监听函数
   bindKeyInput: function(e) {
-      const t = this
-      //红包金额
-      if(e.target.id === 'jine'){
-              t.data.inputTxt_jine = Number(e.detail.value)
-              //传服务器的cash为红包金额，不包括服务费，单位为分
-              t.data.cash = Number(e.detail.value)*100
-              //服务费为6%，保留两位小数
-              let _charge_money;
-              let _charge_money_toFixed = (Number(e.detail.value)*0.06).toFixed(2)
-              let _charge_money_noFixed = Number(e.detail.value)*0.06
-              //不足1分按1分算
-              if(_charge_money_noFixed>_charge_money_toFixed){
-                    _charge_money = Number(_charge_money_toFixed)+0.01;
-              }
-              else{
-                  _charge_money = _charge_money_toFixed;
-              }
-              t.data.all_money = Number(_charge_money)+Number(e.detail.value)
-              t.setData({
-                      charge_money:_charge_money
-              })
-      }
-      //人数
-      if(e.target.id === 'renshu') {
-              t.data.inputTxt_renshu = Number(e.detail.value)
-      }
-      //红包数量
-      if(e.target.id === 'shuliang') {
-              t.data.inputTxt_shuliang = Number(e.detail.value)
-      }
-      //填写问题
-      if(e.target.id === 'tianxiewenti'){
-              t.data.inputTxt_wenti = e.detail.value
-      }
-      //悬赏问题
-      if(e.target.id === 'xswenti'){
-              t.data.inputTxt_xswenti = e.detail.value
-      }
+        console.log('尚未定义');
 },
 _requestPayment: function(res1){
       const t = this
@@ -425,10 +449,12 @@ _requestPayment: function(res1){
       //  'signType': 'MD5',
       //  'paySign': '',
       //   'success':function(res){
+      //
       //         //充值成功后发送请求返回一个_redid
       //         t._return_redid(res1)
+      //         t.build_red_packet()充值后自动调起发送红包按钮的函数
       //         t._getYuE_request()//支付完成后获取余额
-      //         t.
+      //
       //   },
       //   'fail':function(res){
       //     wx.showToast({
@@ -515,10 +541,10 @@ _getYuE_request: function(){
       })
   },
   onLoad: function () {
-      var that = this
+      var t = this
       //发送请求拿到余额
-      that._getYuE_request()
-      that.setData({
+      t._getYuE_request()
+      t.setData({
           userInfo: app.G.userInfo
       })
   },
