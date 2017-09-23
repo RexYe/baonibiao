@@ -16,17 +16,18 @@ var audioContext = new AudioContext(),
     voiceDataArr = new Array(),
     
     voiceAnalyser = function() {
-    this.file = null; //当前音频文件
-    this.audioContext = null;
-    this.source = null; //audio对象source属性
-    this.animationId = null;
-    this.status = 0; //播放器状态
-    this.forceStop = false;
-    this.heightest = 0;
-    this.loadest = 0;
-};
+      this.file = null; //当前音频文件
+      this.audioContext = null;
+      this.source = null; //audio对象source属性
+      this.animationId = null;
+      this.status = 0; //播放器状态
+      this.forceStop = false;
+      this.heightest = 0;
+      this.loadest = 0;
+    };
 
 voiceAnalyser.prototype = {
+  
     _initialize: function(arrayBuffer) {
       var _this = this
       audioContext.decodeAudioData(arrayBuffer, function(buffer) {
@@ -36,10 +37,12 @@ voiceAnalyser.prototype = {
           console.error(e);
       });
     },
+    
     _start: function(audioContext, buffer) {
         var audioBufferSouceNode = audioContext.createBufferSource(),
             analyser = audioContext.createAnalyser(),
-            that = this;
+            _this = this;
+            
         //链接分析器，源，和播放器
         audioBufferSouceNode.connect(analyser);
         analyser.connect(audioContext.destination);
@@ -60,45 +63,63 @@ voiceAnalyser.prototype = {
         this._getData(analyser);
         //播放完毕
         audioBufferSouceNode.onended = function() {
-            that._audioEnd(that);
+            _this._audioEnd(_this);
         };
     },
+    
     _getData: function(analyser) {
-        var that = this
+        var _this = this
         var loopData = function() {
             var array = new Uint8Array(analyser.frequencyBinCount);
             analyser.getByteFrequencyData(array);
             
-            var load = that._getLoad(array)
-            var height = that._getHeight(array)
-            if(load){
-              (that.loadest<load) && (that.loadest=load)
-            }
-            if(height){
-              (that.heightest<height) && (that.heightest=height)
-            }
+            // var load = _this._getLoad(array)
+            // var height = _this._getHeight(array)
+            // if(load){
+            //   (_this.loadest<load) && (_this.loadest=load)
+            // }
+            // if(height){
+            //   (_this.heightest<height) && (_this.heightest=height)
+            // }
+            _this._anaVoice(array)
             
             voiceDataArr.push(array)
-            that.animationId = requestAnimationFrame(loopData);
+            _this.animationId = requestAnimationFrame(loopData);
         }
         this.animationId = requestAnimationFrame(loopData);
     },
-    _getLoad:function (u8a) {
-      var load = 0
+    
+    // _getLoad:function (u8a) {
+    //   var load = 0
+    //   for(let i=0;i<u8a.length;i++){
+    //     (u8a[i]>load) && (load=u8a[i])
+    //   }
+    //   return load
+    // },
+    // _getHeight:function (u8a) {
+    //   var height = 0
+    //   for(let i=0;i<u8a.length;i++){
+    //     u8a[i] && (height=i)
+    //   }
+    //   return height
+    // },
+    _anaVoice:function (u8a) {
       for(let i=0;i<u8a.length;i++){
-        (u8a[i]>load) && (load=u8a[i])
+        (u8a[i]>this.loadest) && (this.loadest=u8a[i]);
+        u8a[i] && (this.heightest<i) &&(this.heightest=i)
       }
-      return load
     },
-    _getHeight:function (u8a) {
-      var height = 0
-      for(let i=0;i<u8a.length;i++){
-        u8a[i] && (height=i)
-      }
-      return height
-    },
+    
     _audioEnd: function(instance) {
-      // console.log(voiceDataArr);
+      
+      /*音频总数据voiceDataArr
+       *type = array
+       *下标和时间正相关
+       *每一个元素为一个Uint8Array
+       *Uint8Array下标为音调从低到高，分为1024段
+       *Uint8Array值为声音响度
+       console.log(voiceDataArr);*/
+      
       //结束动画播放
       cancelAnimationFrame(this.animationId);
       //如果被打断
@@ -107,8 +128,11 @@ voiceAnalyser.prototype = {
           this.status = 1;
           return;
       };
-      this.status = 0;
+      //音频时长
+      console.log(this.source.buffer.duration);
+      //音频响度以及音调高度
       console.log(this.loadest-loadStandard,this.heightest-heightStandard);
+      [this.loadest,this.heightest,this.status] = [0,0,0]
     },
     
 }
