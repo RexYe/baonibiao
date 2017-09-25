@@ -1,39 +1,24 @@
 //index.js
 //发送红包页面
 var app = getApp()
+const CDNHEAD = 'http://sharer176.oss-cn-beijing.aliyuncs.com'
 const HONGBAO_TYPE = [
   {
     bgy:{
       type:'飙高音红包',
-      imgsrc:'./img/飙高音红包.png',
+      imgsrc:`${CDNHEAD}/baonibiao/bgy_icon.svg`,
       dom:{
         renshu:true
       }
     },
     gwc:{
       type:'跟我唱红包',
-      imgsrc:'./img/跟我唱红包.png',
+      imgsrc:`${CDNHEAD}/baonibiao/gwc_icon.svg`,
       dom:{
         shuliang:true,
         changyiju:true
       }
     },
-    tw:{
-        type:'提问红包',
-        imgsrc:'./img/提问红包.png',
-        dom:{
-          shuliang:true,
-          tianxiewenti:true
-        }
-      },
-    xs:{
-        type:'悬赏红包',
-        imgsrc:'./img/悬赏红包.png',
-        dom:{
-          shuliang:true,
-          xswenti:true
-        }
-      },
     xy:{
         type:'幸运红包',
         imgsrc:'./img/幸运红包.png',
@@ -67,6 +52,7 @@ const HONGBAO_TYPE = [
       }
   }
 ]
+//绕口令库
 const RKL_TYPE = [
   {
     type:'1.粉红墙上画凤凰，红凤凰，粉凤凰，粉红凤凰。',
@@ -87,13 +73,6 @@ const RKL_TYPE = [
 
 Page({
     data: {
-      inputTxt_jine:'',
-      inputTxt_renshu:'',
-      inputTxt_shuliang:'',
-      inputTxt_wenti:'',
-      inputTxt_xswenti:'',
-      inputTxt_sqzjweizhi:'',//手气最佳位置
-      inputTxt_kouling:'',//口令
       cannotsend_jine:1,//判断金额是否符合发送红包要求
       cannotsend_renshu:1,//判断人数是否符合发送红包要求
       cannotsend_shuliang:1,//判断红包数量是否符合发送红包要求
@@ -106,7 +85,7 @@ Page({
       available_balance:0.00,
       //付款总金额,单位为分
       cash:0,
-      choose_type_img:'./img/飙高音红包.png',
+      choose_type_img:`${CDNHEAD}/baonibiao/bgy_icon.svg`,
       choose_type_text:'飙高音红包',
       choose_rkl_type_text:'',//发红包页显示的绕口令选项
       choose_type_div_if:false,//选择红包类型弹窗
@@ -117,7 +96,7 @@ Page({
       wx_request_data:{},
       animationData:{},//动画数据
       isShow:{
-        renshu: true
+          renshu: true
       },
       userInfo: {}
     },
@@ -182,8 +161,6 @@ Page({
         t.data.choose_type_text = {
             'bgy':'飙高音红包',
             'gwc':'跟我唱红包',
-            'tw':'提问红包',
-            'xs':'悬赏红包',
             'xy':'幸运红包',
             'jj':'尖叫红包',
             'kl':'口令红包',
@@ -193,7 +170,7 @@ Page({
         //判断当前红包是否有以下这些dom节点
         let isShow = HONGBAO_TYPE[0][t.data.type].dom
         let imgsrc_text = t.data.choose_type_text
-        let imgsrc = './img/'+imgsrc_text+'.png'
+        let imgsrc = HONGBAO_TYPE[0][t.data.type].imgsrc
         t.setData({
             isShow:isShow,
             choose_type_img:imgsrc,//图片路径
@@ -201,10 +178,8 @@ Page({
             type:t.data.type,
             //选择红包类型时清空data中的input值
             inputTxt_jine:'',
-            inputTxt_renshu:'',
-            inputTxt_shuliang:'',
-            inputTxt_wenti:'',
-            inputTxt_xswenti:'',
+            // inputTxt_renshu:'',
+            // inputTxt_shuliang:'',
             charge_money:'0.00'
         })
     },
@@ -307,10 +282,10 @@ Page({
             this.data.cannotsend_jine += 1
             this._showModal('红包金额不能超过10元')
         }
-        else if(jine < 1) {
-            this.data.cannotsend_jine += 1
-            this._showModal('红包最低金额不得少于1元')
-        }
+        // else if(jine < 1) {
+        //     this.data.cannotsend_jine += 1
+        //     this._showModal('红包最低金额不得少于1元')
+        // }
         else{
             this.data.cannotsend_jine = 0
         }
@@ -358,8 +333,7 @@ Page({
     //路径1：走内部支付
     _gotoPay: function() {
         const t = this
-        // 将时间戳从number转成string
-        // let timestamp = (Date.parse(new Date())/1000).toString();
+
         wx.request({
             url: `${app.G.REQPREFIX}/api/hongbao/fa`,
             method: 'POST',
@@ -441,6 +415,10 @@ Page({
         const t = this
         t.data.inputTxt_shuliang = +e.detail.value
     },
+    shouqizjInput: function(e){
+        const t = this
+        t.data.inputTxt_shouqizj = +e.detail.value
+    },
     //input监听函数
     bindKeyInput: function(e) {
         console.log('尚未定义');
@@ -448,29 +426,30 @@ Page({
     _requestPayment: function(res1) {
         const t = this
         console.log('调起微信支付钱获取的参数------>',res1)
-        // wx.requestPayment({
-        //  timeStamp': '',
-        //  'nonceStr': '',
-        //  'package': '',
-        //  'signType': 'MD5',
-        //  'paySign': '',
-        //   'success':function(res){
-        //
-        //         //充值成功后发送请求返回一个_redid
-        //         t._return_redid(res1)
-        //         t.build_red_packet()充值后自动调起发送红包按钮的函数
-        //         t._getYuE_request()//支付完成后获取余额
-        //
-        //   },
-        //   'fail':function(res){
-        //     wx.showToast({
-        //         title: '支付失败',
-        //         icon: 'loading',
-        //         duration: 2000
-        //     })
-        //   },
-        //   'complete':function(res){}
-        // })
+        // 将时间戳从number转成string
+        let timestamp = (res1.data.timeStamp).toString()
+        wx.requestPayment({
+           'timeStamp': timestamp,
+           'nonceStr': res1.data.nonceStr,
+           'package': res1.data.package,
+           'signType': res1.data.signType,
+           'paySign': res1.data.paySign,
+          'success':function(res){
+                //充值成功后发送请求返回一个_redid
+                console.log('wxpay成功');
+                // t._return_redid(res1)
+                // t.build_red_packet()//充值后自动调起发送红包按钮的函数
+                // t._getYuE_request()//支付完成后获取余额
+          },
+          'fail':function(res){
+            wx.showToast({
+                title: '取消支付',
+                icon: 'loading',
+                duration: 1500
+            })
+          },
+          'complete':function(res){}
+        })
     },
     //返回服务器_redid请求
     _return_redid: function() {
