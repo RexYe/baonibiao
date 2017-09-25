@@ -32,14 +32,14 @@
             </view>
             <view class="section" wx:if="{{isShow.tianxiekouling}}">
                 <text class="title">填写口令</text>
-                <input placeholder-style="color:#bbbbbb" placeholder="填写口令" type="text" confirm-type="next" bindinput="bindKeyInput" maxlength="14" value="{{inputTxt_kouling}}"/>
+                <input placeholder-style="color:#bbbbbb" placeholder="填写口令" type="text" confirm-type="next" bindinput="koulingInput" maxlength="14" value="{{inputTxt_kouling}}"/>
             </view>
             <view class="section" id="choose_rkl" wx:if="{{isShow.rkl}}">
                 <text class="title">选择绕口令</text>
                 <image class="rkl-img" src="./img/下拉.png" bindtap="choose_rkl_func"></image>
-                <text>{{choose_rkl_type_text}}</text>
+                <text class="rkl-show">{{choose_rkl_type_text}}</text>
             </view>
-            <text class="tips">需支付¥{{charge_money}}服务费，优先使用余额¥{{available_balance}}</text>
+            <text class="tips">需支付¥{{fee}}服务费，优先使用余额¥{{yue}}</text>
             <button type="warn" size="default" bindtap="build_red_packet">生成红包</button>
         </view>
     </view>

@@ -4,6 +4,11 @@ var app = getApp()
 const CDNHEAD = 'http://sharer176.oss-cn-beijing.aliyuncs.com'
 const HONGBAO_TYPE = [
   {
+    //飙高音红包--->输入:金额、参与人数
+    //规则： 仅有一个红包，根据抢的人发出的声音，取最高音发送红包；
+    //      时间默认为5分钟，若5分钟内参与人数未达设置的人数，则取已参与人数的最高音；
+    //      若5分钟内无人参与，则红包进入退还账户流程；
+    //      0<金额<11    0<参与人数<11
     bgy:{
       type:'飙高音红包',
       imgsrc:`${CDNHEAD}/baonibiao/bgy_icon.svg`,
@@ -11,6 +16,11 @@ const HONGBAO_TYPE = [
         renshu:true
       }
     },
+    //跟我唱红包--->输入:金额、红包个数
+    //规则： 发红包的人唱一句歌，系统判断抢红包的人跟着唱的准确度，准确度越高，分的红包金额越大；
+    //      时间默认为5分钟，若5分钟内参与人数未达设置的人数，则参与人数分得人数对应比例的金额，其余的退还账户；
+    //      若5分钟内无人参与，则红包进入退还账户流程；
+    //      0<金额<11    0<红包个数<11
     gwc:{
       type:'跟我唱红包',
       imgsrc:`${CDNHEAD}/baonibiao/gwc_icon.svg`,
@@ -19,6 +29,11 @@ const HONGBAO_TYPE = [
         changyiju:true
       }
     },
+    //幸运红包--->输入:金额、参与人数、手气最佳位置
+    //规则： 类似于外卖红包，定义一个最佳手气的位置，分享红包时显示 如'第6个人将获得最大红包！'；
+    //      定义的手气最佳位置将获得总金额的一半以及另一半中的随机份额，而其余人随机分的剩下的一半；
+    //      若3小时内参与人数不够，则剩余金额进入退还账户流程；
+    //      0<金额<11    0<参与人数<11   0<手气最佳位置<参与人数
     xy:{
         type:'幸运红包',
         imgsrc:'./img/幸运红包.png',
@@ -27,6 +42,11 @@ const HONGBAO_TYPE = [
           shouqizuijia:true
         }
       },
+      //尖叫红包--->输入:金额、红包个数
+      //规则： 根据抢的人发出的声音，取最大声者发送红包；
+      //      时间默认为5分钟，若5分钟内参与人数未达设置的人数，则取已参与人数的最高音；
+      //      若5分钟内无人参与，则红包进入退还账户流程；
+      //      0<金额<11    0<参与人数<11 
     jj:{
         type:'尖叫红包',
         imgsrc:'./img/尖叫红包.png',
@@ -34,6 +54,10 @@ const HONGBAO_TYPE = [
           renshu:true,
         }
       },
+      //口令红包--->输入:金额、红包个数、口令
+      //规则： 根据输入的口令，抢的人语音输入口令，正确者随机分得红包
+      //      若3小时内参与人数不够，则剩余金额进入退还账户流程；
+      //      0<金额<11    0<红包个数<11
     kl:{
         type:'口令红包',
         imgsrc:'./img/口令红包.png',
@@ -42,6 +66,10 @@ const HONGBAO_TYPE = [
           tianxiekouling:true
         }
       },
+      //绕口令红包--->输入:金额、红包个数、选择绕口令
+      //规则： 根据选择的绕口令，抢的人语音念出绕口令，最准确者分的金额最多
+      //      若3小时内参与人数不够，则剩余金额进入退还账户流程；
+      //      0<金额<11    0<红包个数<11
     rkl:{
         type:'绕口令红包',
         imgsrc:'./img/绕口令红包.png',
@@ -55,58 +83,53 @@ const HONGBAO_TYPE = [
 //绕口令库
 const RKL_TYPE = [
   {
-    type:'1.粉红墙上画凤凰，红凤凰，粉凤凰，粉红凤凰。',
+    type:'粉红墙上画凤凰，红凤凰，粉凤凰，粉红凤凰。',
   },
   {
-    type:'2.早招租，晚招租，总找周邹郑曾朱。',
+    type:'早招租，晚招租，总找周邹郑曾朱。',
   },
   {
-    type:'3.风吹藤动铜铃动，风停藤定铜铃静。',
+    type:'风吹藤动铜铃动，风停藤定铜铃静。',
   },
   {
-    type:'4.黑化肥发灰会挥发，灰化肥挥发会发黑。',
+    type:'黑化肥发灰会挥发，灰化肥挥发会发黑。',
   },
   {
-    type:'5.妈妈卖麦，麦卖妈妈买袜。',
+    type:'妈妈卖麦，麦卖妈妈买袜。',
   },
 ]
 
 Page({
     data: {
-      cannotsend_jine:1,//判断金额是否符合发送红包要求
-      cannotsend_renshu:1,//判断人数是否符合发送红包要求
-      cannotsend_shuliang:1,//判断红包数量是否符合发送红包要求
-      cansendFLAG:false,
-      type:'bgy',//传给服务器的红包类型,初始的红包类型为飙高音
-      is_need_wxpay:'',//是否需要微信支付
-      //服务费
-      charge_money:'0.00',
-      //用户余额
-      available_balance:0.00,
-      //付款总金额,单位为分
-      cash:0,
+      cannotsend_jine:1, //判断金额是否符合发送红包要求
+      cannotsend_renshu:1, //判断人数是否符合发送红包要求
+      cannotsend_shuliang:1, //判断红包数量是否符合发送红包要求
+      cannotsend_shouqizj:1, //判断手气最佳位置是否符合发送红包要求
+      cansendFLAG:false, //是否符合发送要求的最终判断
+      type:'bgy', //传给服务器的红包类型,初始的红包类型为飙高音
+      is_need_wxpay:'', //是否需要微信支付
+      fee:'0.00', //服务费
+      yue:0.00, //用户余额
+      cash:0, //付款总金额,单位为分
       choose_type_img:`${CDNHEAD}/baonibiao/bgy_icon.svg`,
       choose_type_text:'飙高音红包',
-      choose_rkl_type_text:'',//发红包页显示的绕口令选项
-      choose_type_div_if:false,//选择红包类型弹窗
-      choose_rkl_div_if:false,//选择绕口令弹窗
-      rkl_input_type:'0',
-      hongbao_type:HONGBAO_TYPE[0],
-      rkl_type:RKL_TYPE,
-      wx_request_data:{},
-      animationData:{},//动画数据
+      choose_type_div_if:false, //选择红包类型弹窗判断 wx:if
+      choose_rkl_div_if:false, //选择绕口令弹窗判断 wx:if
+      hongbao_type:HONGBAO_TYPE[0], //红包类型库
+      rkl_type:RKL_TYPE, //绕口令库
+      wx_request_data:{}, //请求数据存储处
+      animationData:{}, //动画数据
       isShow:{
           renshu: true
-      },
-      userInfo: {}
+      }, //针对不同红包，显示不同的选项
+      userInfo: {} //用户信息
     },
     //点击选择红包类型触发
     choose_type_div: function() {
         const t = this
-        //播放打开动画
-        t._open_animation()
+        t._open_animation() //播放打开动画
         t.setData({
-            choose_type_div_if:true
+            choose_type_div_if:true //显示红包选择的弹窗
         })
     },
     //点击选择红包类型后弹出窗口的动画
@@ -150,8 +173,7 @@ Page({
     //点击红包类型，完成选择后触发
     choose_type_done: function(e) {
         const t = this
-        //播放关闭动画
-        t._close_animation()
+        t._close_animation() //播放关闭动画
         //0.3秒后隐藏选择菜单
         setTimeout(()=>{
             t.setData({
@@ -169,34 +191,31 @@ Page({
         t.data.type = e.currentTarget.dataset.id || 'bgy'
         //判断当前红包是否有以下这些dom节点
         let isShow = HONGBAO_TYPE[0][t.data.type].dom
-        let imgsrc_text = t.data.choose_type_text
         let imgsrc = HONGBAO_TYPE[0][t.data.type].imgsrc
         t.setData({
             isShow:isShow,
-            choose_type_img:imgsrc,//图片路径
+            choose_type_img:imgsrc, //图片路径
             choose_type_text:t.data.choose_type_text,
             type:t.data.type,
             //选择红包类型时清空data中的input值
             inputTxt_jine:'',
-            // inputTxt_renshu:'',
-            // inputTxt_shuliang:'',
-            charge_money:'0.00'
+            fee:'0.00'
         })
     },
     //点击生成红包按钮触发函数
     build_red_packet: function() {
         const t = this
-        t._jineAvailable(t.data.inputTxt_jine)//金额已填 1<金额<10
-        t._is_need_wxpay() //判断是否需要微信支付,判断余额够不够
+        t._jineAvailable(t.data.inputTxt_jine) //金额已填 1<金额<10
+        t._is_need_wxpay() //判断是否需要微信支付,即判断余额够不够
         if(t.data.is_need_wxpay) {
-            t._needWxPay()//余额不够,先充值
+            t._needWxPay() //余额不够,先充值
         }
         else{
             //余额够，先判断输入是否符合规则，再走内部支付
-            t._judgeInputByType()//第一步，根据类型判断输入
+            t._judgeInputByType() //第一步，根据类型判断输入
             //第二步，综合判断符合发送规则后，进入内部支付流程
             if(t.data.cansendFLAG === true) {
-                  t._noneedWxPay()
+                t._noneedWxPay()
             }
         }
     },
@@ -222,25 +241,66 @@ Page({
     //根据红包类型判断输入是否符合规则
     _judgeInputByType: function(type) {
         const t = this
-        if(type == 'bgy') {
-            t._jineAvailable(t.data.inputTxt_jine)
-            t._renshuAvailable(t.data.inputTxt_renshu)
-            if(t.data.cannotsend_jine == 0 && t.data.cannotsend_renshu == 0){
-                t.data.cansendFLAG = true
+        t._jineAvailable(t.data.inputTxt_jine)  //共同点：均需判断金额
+        //当金额已经满足条件后，再判断其余输入
+        if(t.data.cannotsend_jine == 0) {
+            if(type == 'bgy') {
+                t._renshuAvailable(t.data.inputTxt_renshu) //判断人数
+                if(t.data.cannotsend_renshu == 0) {
+                    t.data.cansendFLAG = true  //两个输入框均符合则true
+                }
+                else{
+                    t.data.cansendFLAG = false
+                }
             }
-            else{
-                t.data.cansendFLAG = false
+            if(type == 'gwc') {
+                //此处还缺少语音输入
+                t._shuliangAvailable(t.data.inputTxt_shuliang) //判断红包数量
+                if(t.data.cannotsend_shuliang == 0) {
+                    t.data.cansendFLAG = true  //两个输入框均符合则true
+                }
+                else{
+                    t.data.cansendFLAG = false
+                }
+            }
+            if(type == 'xy') {
+                t._renshuAvailable(t.data.inputTxt_renshu) //判断人数
+                t._shouqizjAvailable(t.data.inputTxt_shouqizj,t.data.inputTxt_renshu) //判断手气最佳位置
+                if(t.data.cannotsend_renshu == 0 && t.data.cannotsend_shouqizj == 0) {
+                    t.data.cansendFLAG = true  //两个输入框均符合则true
+                }
+                else{
+                    t.data.cansendFLAG = false
+                }
+            }
+            if(type == 'jj') {
+                t._renshuAvailable(t.data.inputTxt_renshu) //判断人数
+                if(t.data.cannotsend_renshu == 0) {
+                    t.data.cansendFLAG = true  //两个输入框均符合则true
+                }
+                else{
+                    t.data.cansendFLAG = false
+                }
+            }
+            if(type == 'kl') {
+                t._shuliangAvailable(t.data.inputTxt_shuliang) //判断红包数量
+                if(t.data.cannotsend_shuliang == 0) {
+                    t.data.cansendFLAG = true  //两个输入框均符合则true
+                }
+                else{
+                    t.data.cansendFLAG = false
+                }
+            }
+            if(type == 'rkl') {
+                t._shuliangAvailable(t.data.inputTxt_shuliang) //判断红包数量
+                if(t.data.cannotsend_shuliang == 0) {
+                    t.data.cansendFLAG = true  //两个输入框均符合则true
+                }
+                else{
+                    t.data.cansendFLAG = false
+                }
             }
         }
-        // if(type=='gwc'){
-        //         t._shuliangAvailable(t.data.inputTxt_shuliang)
-        // }
-        // if(type=='tw'){
-        //
-        // }
-        // if(type=='xs'){
-        //
-        // }
     },
     //需要微信支付
     _needWxPay: function() {
@@ -250,7 +310,6 @@ Page({
                 content: '余额不足，是否充值？',
                 success: function(res) {
                     if (res.confirm) {
-                        console.log('确定充值')
                         t.data.wx_request_data = {
                             is_need_wxpay:t.data.is_need_wxpay,
                             cash:t.data.cash,
@@ -304,6 +363,20 @@ Page({
             this.data.cannotsend_renshu = 0
         }
     },
+    //判断手气最佳位置是否符合要求
+    _shouqizjAvailable: function(shouqizj,renshu) {
+        if(shouqizj > renshu) {
+            this.data.cannotsend_shouqizj += 1
+            this._showModal('手气最佳位置不得大于总人数')
+        }
+        else if(shouqizj < 1) {
+            this.data.cannotsend_shouqizj += 1
+            this._showModal('手气最佳位置需大于0')
+        }
+        else{
+            this.data.cannotsend_shouqizj = 0
+        }
+    },
     //判断数量是否符合要求
     _shuliangAvailable: function(shuliang) {
         if(shuliang > 10) {
@@ -322,7 +395,7 @@ Page({
     _is_need_wxpay: function(type) {
         const t = this
         //如余额大于等于支付金额，则无需调用微信支付
-        if(t.data.all_money <= t.data.available_balance) {
+        if(t.data.all_money <= t.data.yue) {
             t.data.is_need_wxpay = false
         }
         //如余额小于需支付金额，则调用微信支付，并且支付的金额不抵消余额，为全额
@@ -333,7 +406,6 @@ Page({
     //路径1：走内部支付
     _gotoPay: function() {
         const t = this
-
         wx.request({
             url: `${app.G.REQPREFIX}/api/hongbao/fa`,
             method: 'POST',
@@ -342,7 +414,7 @@ Page({
                 'content-type': 'application/json'
             },
             success: function(res) {
-                console.log('请求成功（内部支付）,已经拿到_redid----->',res)
+                console.log('（内部支付）请求成功,已经拿到_redid----->',res)
                 t._getYuE_request()//内部支付完成后获取余额
                 let _redid = res.data
                 wx.navigateTo({
@@ -351,9 +423,9 @@ Page({
                 })
             },
             fail: function(err) {
-              console.log('请求失败')
+              console.log('(内部支付)请求失败')
               wx.showToast({
-                  title: '创建订单失败',
+                  title: '发送红包失败',
                   icon: 'loading',
                   duration: 2000
               })
@@ -374,7 +446,11 @@ Page({
             },
             success: function(res) {
                 if(res.data.length == 0 || res.data == "Internal Server Error") {
-                    console.log('微信支付瘫痪了，请稍后再试')
+                    wx.showToast({
+                        title: '微信支付瘫痪了，请稍后再试',
+                        icon: 'loading',
+                        duration: 1500
+                    })
                 }
                 else{
                     console.log('请求成功（需要微信支付）,----->',res)
@@ -382,13 +458,13 @@ Page({
                 }
             },
             fail: function(err) {
-              console.log('请求失败(需要微信支付)')
-              wx.showToast({
-                  title: '创建订单失败',
-                  icon: 'loading',
-                  duration: 2000
-              })
-              console.log(err)
+                console.log('请求失败(需要微信支付)')
+                wx.showToast({
+                    title: '微信支付失败',
+                    icon: 'loading',
+                    duration: 1500
+                })
+                console.log(err)
             }
         })
     },
@@ -401,7 +477,7 @@ Page({
         //服务费为6%，保留两位小数,不足1分按1分算
         let fee = ((Math.floor(cash*0.06)+1).toFixed(2))/100
         t.setData({
-            charge_money:fee,
+            fee:fee,
             cash:cash
         })
     },
@@ -415,13 +491,15 @@ Page({
         const t = this
         t.data.inputTxt_shuliang = +e.detail.value
     },
-    shouqizjInput: function(e){
+    //手气最佳位置监听函数
+    shouqizjInput: function(e) {
         const t = this
         t.data.inputTxt_shouqizj = +e.detail.value
     },
-    //input监听函数
-    bindKeyInput: function(e) {
-        console.log('尚未定义');
+    //口令输入监听函数
+    koulingInput: function(e) {
+        const t = this
+        t.data.inputTxt_kouling = +e.detail.value
     },
     _requestPayment: function(res1) {
         const t = this
@@ -434,49 +512,56 @@ Page({
            'package': res1.data.package,
            'signType': res1.data.signType,
            'paySign': res1.data.paySign,
-          'success':function(res){
+           'success':function(res){
                 //充值成功后发送请求返回一个_redid
-                console.log('wxpay成功');
-                // t._return_redid(res1)
-                // t.build_red_packet()//充值后自动调起发送红包按钮的函数
-                // t._getYuE_request()//支付完成后获取余额
-          },
-          'fail':function(res){
-            wx.showToast({
-                title: '取消支付',
-                icon: 'loading',
-                duration: 1500
-            })
-          },
-          'complete':function(res){}
-        })
+                console.log('微信支付成功（充值成功）')
+                console.log(res);
+                // t._getYuE_request()//充值完成后获取一次余额
+                //充值后，则余额够，先判断输入是否符合规则，再走内部支付
+                t._judgeInputByType() //第一步，根据类型判断输入
+                //第二步，综合判断符合发送规则后，进入内部支付流程
+                if(t.data.cansendFLAG === true) {
+                    t._noneedWxPay()
+                }
+                // t._getYuE_request()//红包发完后再次获取余额
+                // t._return_redid(res1)--------(可能不需要)
+           },
+           'fail':function(res){
+               wx.showToast({
+                  title: '取消支付',
+                  icon: 'loading',
+                  duration: 1500
+               })
+           },
+           'complete':function(res){}
+         })
     },
-    //返回服务器_redid请求
-    _return_redid: function() {
-        wx.request({
-            // url: `${app.G.REQPREFIX}/api/wx/payment`,
-            method: 'POST',
-            data: res.data._redid,
-            header: {
-                'content-type': 'application/json'
-            },
-            success: function(res) {
-                wx.showToast({
-                    title: '支付成功',
-                    icon: 'success',
-                    duration: 2000
-                })
-            },
-            fail: function(err) {
-                wx.showToast({
-                    title: '发送红包ID失败',
-                    icon: 'loading',
-                    duration: 2000
-                })
-                console.log(err)
-            }
-        })
-    },
+    // //返回服务器_redid请求
+    // _return_redid: function() {
+    //     wx.request({
+    //         // url: `${app.G.REQPREFIX}/api/wx/payment`,
+    //         method: 'POST',
+    //         data: res.data._redid,
+    //         header: {
+    //             'content-type': 'application/json'
+    //         },
+    //         success: function(res) {
+    //             wx.showToast({
+    //                 title: '支付成功',
+    //                 icon: 'success',
+    //                 duration: 2000
+    //             })
+    //         },
+    //         fail: function(err) {
+    //             wx.showToast({
+    //                 title: '发送红包ID失败',
+    //                 icon: 'loading',
+    //                 duration: 2000
+    //             })
+    //             console.log(err)
+    //         }
+    //     })
+    // },
     //获取余额的请求
     _getYuE_request: function() {
         const t = this
@@ -493,7 +578,7 @@ Page({
                 console.log('获取余额成功')
                 console.log(res)
                 t.setData({
-                    available_balance:res.data.yue/100
+                    yue:res.data.yue/100
                 })
             },
             fail: function(err) {
@@ -515,17 +600,12 @@ Page({
         })
     },
     choose_rkl_type_done: function(e) {
+        console.log(e);
         const t = this
-        t.data.choose_rkl_type_text = {
-          '0':'绕口令1',
-          '1':'绕口令2',
-          '2':'绕口令3',
-          '3':'绕口令4',
-          '4':'绕口令5'
-        }[e.currentTarget.dataset.id] || '绕口令1'
+        //发红包页显示的绕口令选项
+        t.data.choose_rkl_type_text = RKL_TYPE[e.currentTarget.dataset.id].type
         t.setData({
-            choose_rkl_type_text:t.data.choose_rkl_type_text,
-            rkl_input_type:e.currentTarget.dataset.id
+            choose_rkl_type_text:t.data.choose_rkl_type_text
         })
         t.setData({
             choose_rkl_div_if:false

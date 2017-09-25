@@ -88,6 +88,13 @@ page {
   width: 44rpx;
   height: 40rpx;
 }
+#choose_rkl .rkl-show{
+  color: #a7a7a7;
+  width: 250rpx;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .index-container .choose_type_div .hongbao_type{
   width: 240rpx;
   height: 260rpx;
