@@ -18,7 +18,7 @@
               <text class="title">参与人数</text>
               <input placeholder-style="color:#bbbbbb" id="renshu" placeholder="填写人数" type="number" confirm-type="next" bindinput="renshuInput" maxlength="2" value="{{inputTxt_renshu}}"/>
             </view>
-            <view class="section" wx:if="{{isShow.geshu}}">
+            <view class="section" wx:if="{{isShow.shuliang}}">
               <text class="title">红包个数</text>
               <input placeholder-style="color:#bbbbbb" id="shuliang" placeholder="填写数量" type="number" confirm-type="next" bindinput="bindKeyInput" maxlength="2" value="{{inputTxt_shuliang}}"/>
             </view>
