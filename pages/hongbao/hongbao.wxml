@@ -65,7 +65,7 @@
 
       </view>
       
-      <view id="rec-ope-jubao" bindtap="_jubao">举报</view>
+      <!-- <view id="rec-ope-jubao" bindtap="_jubao">举报</view> -->
       
       
   </view>
@@ -73,7 +73,7 @@
   <view class="receiveInfo">
     <view class="info-header">
       <view id="rec-acount">共{{rpdetail.amountMoney}}元领取{{rpdetail.receiveNum}}/{{rpdetail.amountNum}}个</view>
-      <view id='rec-jubao'>举报</view>
+      <view id='rec-jubao' bindtap="_jubao">举报</view>
     </view>
 
     <view class="receive-peoples" wx:if="{{userList}}">
@@ -120,3 +120,5 @@
       <view wx:for="jubaoList" wx:key="unique" class="jubao-single-div">{{jubaoList[index]}}</view>
       <image id="cancel-img" src="./resource/cancel.svg" bindtap="_cancelJubao"></image>
 </view>
+
+<audio id="myAudio" src="{{nowVoiceUrl}}"></audio>

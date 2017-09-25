@@ -75,7 +75,8 @@ Page({
     windowH:getWindowH()+'px',
     windowW:getWindowW()+'px',
     animationData:{},
-    jubaoList:['123','456','789']
+    jubaoList:['123','456','789'],
+    nowVoiceUrl:''
   },
   test:function (e) {
     console.log(e);
@@ -86,16 +87,20 @@ Page({
     var _data = this.data
     var rpReqData = {}
     
-    this.userInfo = app.G.userInfo
+    var bgam = wx.getBackgroundAudioManager()
+    
+    this.data.userInfo = app.G.userInfo
     // this.userInfo = testUserInfo
     this.setData({
-      userInfo:this.userInfo
+      userInfo:this.data.userInfo
     })
     
     var rpReqParam = {
       rpid : 123,
     }
-    //请求列表数据
+    
+    
+    // 请求列表数据
     // wx.request({
     //   url: `${app.G.REQPREFIX}/api/hongbao/one`, 
     //   data: app.GetReqParam(rpReqParam),
@@ -104,16 +109,12 @@ Page({
     //   },
     //   success: function(res) {
     //     console.log(res.data)
+    //   },
+    //   fail:function (res) {
+    //     console.log(res);
     //   }
     // })
 
-    //下载音频
-    // wx.downloadFile({
-    //   url: 'https://example.com/audio/123', //仅为示例，并非真实的资源
-    //   success: function(res) {
-    //     userList =res
-    //   }
-    // })
     
     this.data.type = 2
     var buttonStr={'0':'飚出你的最高音领取红包',//飙高音红包
@@ -208,12 +209,8 @@ Page({
         success: function(res) {
           var tempFilePath = res.tempFilePath
           
-          // var blob = new Blob(tempFilePath)
-          // var fs = new FileReader()
-          // fs.readAsArrayBuffer(blob)
-          //  var audioCtx = new AudioContext()
-
-          
+  
+          // 
           //  wx.playVoice({
           //     filePath: tempFilePath,
           //     complete: function(){}
@@ -233,7 +230,7 @@ Page({
               console.log(res);
               // myAnalyse(res.data)
             },
-
+          
           })
           
         },
@@ -271,8 +268,10 @@ Page({
   },
   
   playMusic:function (e) {
-    let [_this,_data] = [this,this.data]
-    let id = e.currentTarget.dataset.id
+    
+    let _this = this,
+        _data = this.data,
+        id = e.currentTarget.dataset.id
     
     if(!_data.voiceFlags[id]){
       wx.stopVoice()
@@ -297,6 +296,42 @@ Page({
     else {
       //调用api停止播放音频
       wx.stopVoice()
+      _data.voiceFlags[id] = false
+      this.setData({
+        voiceFlags:_data.voiceFlags
+      })
+    }  
+  },
+
+  playMusicBg:function () {
+      let _this = this,
+          _data = this.data,
+          id = e.currentTarget.dataset.id
+        
+    if(!_data.voiceFlags[id]){
+      wx.stopBackgroundAudio()
+      let tempArr = new Array(_data.userList.length).fill(false)
+      tempArr[id] = true
+      
+      wx.request({
+        url: `${app.G.REQPREFIX}/api/hongbao/one`, 
+        data: app.GetReqParam(rpReqParam),
+        header: {
+            'content-type': 'application/json' // 默认值
+        },
+        success: function(res) {
+            this.setData({
+              voiceFlags:tempArr
+            },function () {
+              // 调用api播放音频
+              bgam.src = res.data.src
+            })
+        },
+      })
+    }
+    else {
+      //调用api停止播放音频
+      wx.stopBackgroundAudio()
       _data.voiceFlags[id] = false
       this.setData({
         voiceFlags:_data.voiceFlags
